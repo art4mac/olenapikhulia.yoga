@@ -1,0 +1,2033 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Олена Піхуля — йоґа онлайн</title>
+<meta name="description" content="Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям. Групові заняття онлайн щосереди та індивідуальні практики." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Onest:wght@400;500&display=swap" />
+
+<script type="importmap">
+{ "imports": { "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm" } }
+</script>
+
+<!-- adaptive rem: scale-up above the 1920 design width, applied before first paint -->
+<script>
+(function () {
+  var FONT_BASE = 16, BASE_W = 1920, COEF = 0.6666;
+  function setRootFontSize() {
+    var reduction = ((BASE_W - window.innerWidth) / BASE_W) * 100 * COEF;
+    var size = FONT_BASE - (FONT_BASE * reduction) / 100;
+    if (size > FONT_BASE) document.documentElement.style.fontSize = size + "px";
+    else document.documentElement.style.removeProperty("font-size");
+  }
+  setRootFontSize();
+  window.addEventListener("resize", setRootFontSize);
+  window.__setRootFontSize = setRootFontSize;
+})();
+</script>
+
+<style>
+/* ============================================================
+   Tokens — "warm linen" palette, derived from the photo set
+   ============================================================ */
+:root{
+  --background:#f6f1e8;      /* linen page */
+  --foreground:#2a2521;
+  --surface:#ede4d6;         /* cards */
+  --surface-card:#fbf8f2;
+  --ink:#2a2521;             /* text + dark bands */
+  --ink-deep:#140f0c;        /* display type over photography */
+  --ink-soft:#6b6259;        /* muted body */
+  --brand:#b4653f;           /* terracotta accent */
+  --brand-light:#c98a63;     /* hover / focus ring */
+  --accent-sage:#8c9a80;     /* second accent */
+  --ghost:#e2d8c8;           /* oversized ghost text */
+  --hairline:#dfd5c6;
+  --on-ink:#f6f1e8;          /* text on the dark bands */
+
+  --radius-card:1.5rem;
+  --radius-card-lg:2rem;
+  --radius-pill:62.5rem;
+  --radius-xl:0.75rem;
+
+  --page-inset:0.5rem;
+}
+
+/* ============================================================
+   Reset
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+img,svg,video{display:block;max-width:100%}
+body{
+  min-height:100vh;
+  background:var(--background);
+  color:var(--foreground);
+  font-family:"Onest",system-ui,sans-serif;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none;padding:0}
+h1,h2,h3,p,figure,blockquote,dl,dd{margin:0}
+address{font-style:normal}
+:focus-visible{outline:2px solid var(--brand-light);outline-offset:2px}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+html.is-locked{position:relative;overflow:hidden;height:100%}
+
+/* ============================================================
+   Adaptive rem grid
+   ============================================================ */
+@media (max-width:1920px){ html{font-size:0.833333vw} }
+@media (max-width:1440px){ html{font-size:1.111111vw} }
+@media (max-width:1024px){ html{font-size:1.5625vw} }
+@media (max-width:640px){  html{font-size:4.444444vw} }
+
+@media (min-width:640px){ :root{ --page-inset:0.75rem } }
+
+main{width:100%;overflow-x:clip;padding:var(--page-inset)}
+
+/* ============================================================
+   Reveal primitives
+   ============================================================ */
+.line{display:block;overflow:hidden;padding-bottom:0.14em}
+.line > span{display:block;transform:translateY(115%);opacity:0;will-change:transform,opacity}
+.line.is-in > span{transform:translateY(0);opacity:1}
+
+.clip{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:0.12em}
+.clip > span{display:inline-block;transform:translateY(115%);opacity:0;will-change:transform,opacity}
+.clip.is-in > span{transform:translateY(0);opacity:1}
+
+.wf{display:inline-block}
+.wf > span{display:inline-block;transform:translateY(18px);opacity:0;will-change:transform,opacity}
+.wf.is-in > span{transform:translateY(0);opacity:1}
+
+.js-rev{opacity:0}
+
+/* ============================================================
+   Shared components
+   ============================================================ */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.22em;
+}
+.eyebrow::before{
+  content:"";width:0.375rem;height:0.375rem;border-radius:var(--radius-pill);
+  background:var(--brand);flex:none;
+}
+.eyebrow--dark{color:var(--ink-soft)}
+.eyebrow--light{color:rgba(246,241,232,0.7)}
+.eyebrow--light::before{background:var(--brand-light)}
+
+.pill{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  border-radius:var(--radius-pill);
+  padding:0.875rem 1.75rem;
+  font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;
+  transition:background-color 220ms ease,color 220ms ease,border-color 220ms ease;
+  border:1px solid transparent;
+}
+.pill svg{width:1rem;height:1rem;flex:none}
+.pill--solid{background:var(--ink);color:var(--on-ink)}
+.pill--solid:hover{background:var(--brand)}
+.pill--light{background:var(--on-ink);color:var(--ink)}
+.pill--light:hover{background:var(--brand);color:var(--on-ink)}
+.pill--outline{border-color:currentColor;color:var(--ink);background:transparent}
+.pill--outline:hover{background:var(--ink);color:var(--on-ink)}
+
+.abtn{
+  width:3rem;height:3rem;display:grid;place-items:center;
+  border-radius:var(--radius-pill);border:1px solid transparent;
+  transition:background-color 220ms ease,color 220ms ease,border-color 220ms ease;
+}
+@media (min-width:640px){ .abtn{width:3.5rem;height:3.5rem} }
+.abtn svg{width:1.25rem;height:1.25rem}
+.abtn--outline{border-color:var(--hairline);background:transparent;color:var(--ink)}
+.abtn--outline:hover{border-color:var(--ink)}
+.abtn--solid{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.abtn--solid:hover{background:var(--brand);border-color:var(--brand)}
+
+.dots{display:flex;align-items:center;gap:0.5rem}
+.dots button{padding:0.375rem;display:block;line-height:0}
+.dots i{
+  display:block;height:0.375rem;width:0.375rem;border-radius:var(--radius-pill);
+  transition:width 320ms cubic-bezier(0.16,1,0.3,1),background-color 320ms ease;
+}
+.dots--dark i{background:var(--ghost)}
+.dots--dark [aria-current="true"] i{background:var(--ink);width:1.25rem}
+.dots--light i{background:rgba(42,37,33,0.25)}
+.dots--light [aria-current="true"] i{background:var(--ink);width:1.25rem}
+
+/* language toggle */
+.lang{display:inline-flex;align-items:center;gap:0.25rem;font-size:0.875rem;font-weight:500;letter-spacing:0.12em}
+.lang button{
+  padding:0.25rem 0.5rem;border-radius:var(--radius-pill);
+  text-transform:uppercase;transition:background-color 200ms ease,color 200ms ease,opacity 200ms ease;
+  opacity:0.55;
+}
+.lang button[aria-pressed="true"]{opacity:1;background:rgba(42,37,33,0.1)}
+.lang--on-ink button[aria-pressed="true"]{background:rgba(246,241,232,0.18)}
+.lang span{opacity:0.35}
+
+/* ============================================================
+   Header (over the hero photo)
+   ============================================================ */
+.site-header{
+  display:flex;align-items:center;
+  padding:1.5rem 1.5rem 0;
+  font-size:0.875rem;color:var(--ink);
+  position:relative;z-index:5;
+}
+@media (min-width:640px){ .site-header{padding:2rem 2.5rem 0} }
+
+.hdr-nav{flex:1;display:none;gap:2rem;align-items:center}
+@media (min-width:1024px){ .hdr-nav{display:flex} }
+.hdr-nav a{opacity:0.75;transition:opacity 200ms ease}
+.hdr-nav a:hover{opacity:1}
+
+.hdr-brand{
+  flex:1;display:flex;align-items:center;gap:0.5rem;white-space:nowrap;
+  font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.14em;
+}
+@media (min-width:640px){ .hdr-brand{font-size:1.125rem;letter-spacing:0.2em} }
+/* on phones the wordmark, the language toggle and the burger have to share
+   one narrow row, so nothing is forced to an equal third */
+@media (max-width:640px){
+  .site-header{justify-content:space-between}
+  .hdr-brand{flex:0 1 auto;letter-spacing:0.1em}
+  .hdr-right{flex:0 0 auto;gap:0.625rem}
+  .site-header .lang{font-size:0.8125rem}
+  .site-header .lang button{padding:0.25rem 0.375rem}
+}
+@media (min-width:1024px){ .hdr-brand{justify-content:center} }
+.brand-mark{width:1.25rem;height:1.25rem;flex:none}
+
+.hdr-right{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:1rem}
+@media (min-width:640px){ .hdr-right{gap:1.25rem} }
+
+.burger{
+  width:2.5rem;height:2.5rem;display:grid;place-items:center;gap:5px;
+  border-radius:var(--radius-pill);
+  background:rgba(42,37,33,0.1);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  transition:background-color 220ms ease;
+  grid-auto-rows:1px;align-content:center;
+}
+.burger:hover{background:rgba(42,37,33,0.2)}
+.burger i{display:block;width:1rem;height:1px;background:var(--ink)}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero{
+  position:relative;isolation:isolate;overflow:hidden;
+  border-radius:var(--radius-card-lg);
+  background:var(--surface);color:var(--ink);
+  height:calc(100svh - 1rem);
+  min-height:36rem;
+  display:flex;flex-direction:column;
+}
+@media (min-width:640px){ .hero{height:calc(100svh - 1.5rem)} }
+
+.hero-plate{position:absolute;inset:0;z-index:-10}
+.hero-plate-inner{position:absolute;left:0;right:0;top:-16%;height:132%;width:100%;will-change:transform}
+.hero-plate-inner picture{display:block;width:100%;height:100%}
+.hero-plate-inner img{width:100%;height:100%;object-fit:cover;object-position:50% 84%}
+@media (max-width:640px){ .hero-plate-inner img{object-position:50% 50%} }
+/* Two scrims instead of one wash: the photo stays clear through the middle,
+   where the figure is, and is only knocked back behind the type. */
+.hero-plate-grad{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom,
+      rgba(246,241,232,0.94) 0%,
+      rgba(246,241,232,0.72) 10%,
+      rgba(246,241,232,0.28) 22%,
+      rgba(246,241,232,0) 32%),
+    linear-gradient(to top,
+      rgba(246,241,232,0.94) 0%,
+      rgba(246,241,232,0.70) 12%,
+      rgba(246,241,232,0.24) 24%,
+      rgba(246,241,232,0) 36%);
+}
+
+.hero-title-wrap{padding:1rem 1.5rem 0}
+@media (min-width:640px){ .hero-title-wrap{padding:1rem 2.5rem 0} }
+#hero-title{
+  font-size:12.5vw;font-weight:500;text-transform:uppercase;
+  line-height:0.85;letter-spacing:-0.02em;white-space:nowrap;
+  color:var(--ink-deep);text-align:center;
+}
+
+.hero-bottom{
+  margin-top:auto;padding:0 1.5rem 2rem;
+  display:flex;flex-direction:column;gap:1.5rem;
+}
+@media (min-width:640px){
+  .hero-bottom{padding:0 2.5rem 2.5rem;flex-direction:row;justify-content:space-between;align-items:flex-end}
+}
+
+.hero-tagline{
+  font-size:1.9rem;font-weight:500;text-transform:uppercase;
+  line-height:0.95;letter-spacing:-0.02em;color:var(--ink-deep);
+}
+@media (min-width:640px){ .hero-tagline{font-size:2.4rem} }
+/* on phones the tagline rides under the title so the middle of the frame,
+   where the figure is, stays free of type (see placeTagline in the script) */
+.hero-title-wrap .hero-tagline{margin-top:0.875rem}
+/* the floating CTA is on screen from the start; on phones it sits dead centre,
+   so the hero's bottom card needs to clear it */
+@media (max-width:640px){ .hero-bottom{padding-bottom:5.75rem} }
+
+.hero-cluster{display:flex;align-items:flex-end;gap:1rem}
+
+.nextclass{
+  width:100%;max-width:24rem;
+  border:1px solid rgba(42,37,33,0.1);
+  background:rgba(251,248,242,0.76);
+  padding:1.125rem;border-radius:var(--radius-card);
+  box-shadow:0 1.5rem 3rem rgba(42,37,33,0.16);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  display:flex;gap:1.125rem;align-items:stretch;
+}
+@media (min-width:640px){ .nextclass{max-width:23rem} }
+.nextclass-left{display:flex;flex-direction:column;justify-content:space-between;gap:0.75rem;flex:1;min-width:0}
+.nextclass-time{display:flex;align-items:flex-start;gap:0.625rem}
+.nextclass-value{font-size:3.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em}
+.nextclass-cet{font-size:1.125rem;color:var(--brand);font-weight:500;letter-spacing:0.08em}
+/* weekday over "online", two lines */
+.nextclass-caption{font-size:1.0625rem;color:var(--ink-soft);display:flex;flex-direction:column;line-height:1.35}
+
+/* time-zone hint */
+.info{
+  position:relative;display:grid;place-items:center;flex:none;
+  width:2.5rem;height:2.5rem;align-self:flex-start;
+  border-radius:var(--radius-pill);color:var(--ink-soft);
+  transition:color 200ms ease;
+}
+.info:hover{color:var(--ink-deep)}
+.info svg{width:2.5rem;height:2.5rem}
+.info-tip{
+  position:absolute;bottom:calc(100% + 0.5rem);left:50%;
+  transform:translate(-50%,0.25rem);
+  width:15rem;padding:0.75rem 0.875rem;
+  border-radius:var(--radius-xl);
+  background:var(--ink);color:var(--on-ink);
+  font-size:0.875rem;line-height:1.5;font-weight:400;
+  text-transform:none;letter-spacing:0;text-align:left;
+  box-shadow:0 0.75rem 2rem rgba(42,37,33,0.3);
+  opacity:0;pointer-events:none;
+  transition:opacity 200ms ease,transform 200ms ease;
+  z-index:5;
+}
+.info:hover .info-tip,.info:focus .info-tip{opacity:1;transform:translate(-50%,0)}
+/* on phones a bubble anchored to the icon would run off the screen, so it
+   spans the card instead and sits above it */
+@media (max-width:640px){
+  .nextclass{position:relative}
+  .info{position:static}
+  .info-tip{
+    left:0.75rem;right:0.75rem;width:auto;bottom:calc(100% + 0.5rem);
+    transform:translate(0,0.25rem);
+  }
+  .info:hover .info-tip,.info:focus .info-tip{transform:translate(0,0)}
+}
+.nextclass img{width:7.5rem;flex:none;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius-xl);height:auto}
+
+/* ============================================================
+   About (ghost headline + photo carousel)
+   ============================================================ */
+.about{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:var(--background);
+  padding:2.5rem 1.5rem 3rem;
+}
+@media (min-width:640px){ .about{padding:3rem 2.5rem} }
+
+/* "Про мене" card, now the left column of the Formats band */
+.about-card{
+  border-radius:var(--radius-card);background:var(--background);
+  padding:1.75rem;align-self:start;will-change:transform,opacity;
+}
+.badge-chip{
+  display:inline-block;border-radius:var(--radius-xl);background:var(--surface);
+  padding:0.5rem 1rem;font-size:1.25rem;font-weight:500;
+}
+.about-card h3{font-size:1.75rem;font-weight:500;letter-spacing:-0.02em}
+.about-card p{font-size:1.0625rem;color:var(--ink-soft);line-height:1.75;margin-top:0.875rem}
+
+#about-title{
+  position:relative;z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none;
+  max-width:88rem;margin:0 auto;
+  font-size:8.2vw;font-weight:500;text-transform:uppercase;
+  line-height:1.02;letter-spacing:-0.02em;
+}
+.ghost-row{display:flex;justify-content:space-between;align-items:baseline}
+.gw{display:inline-block;color:var(--ghost);will-change:transform}
+.gw--ink{color:var(--ink)}
+
+.about-stage{position:relative}
+.about-photo{position:relative;z-index:10;width:12rem;margin:2rem auto 0}
+@media (min-width:640px){
+  .about-photo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:13.5rem;margin:0}
+}
+.about-photo-motion{will-change:transform,opacity}
+.about-photo-fig{
+  position:relative;transform:rotate(6deg);
+  aspect-ratio:3/4;border-radius:var(--radius-card);
+  background:var(--surface);overflow:hidden;
+  box-shadow:0 1.5rem 3rem rgba(42,37,33,0.2);
+}
+.about-photo-fig img{width:100%;height:100%;object-fit:cover}
+.photo-cap{
+  position:absolute;left:0.75rem;right:0.75rem;bottom:0.75rem;
+  border-radius:var(--radius-xl);
+  background:rgba(42,37,33,0.55);color:var(--on-ink);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  padding:0.5rem 0.75rem;
+}
+.photo-cap b{display:block;font-size:1.125rem;font-weight:500}
+.photo-cap span{display:block;font-size:0.875rem;opacity:0.8}
+
+.about-controls{position:relative;z-index:20;margin-top:2rem;display:flex;align-items:center;justify-content:space-between}
+@media (min-width:640px){ .about-controls{margin-top:2.5rem} }
+
+/* ============================================================
+   Formats
+   ============================================================ */
+.formats{background:var(--surface);padding:5rem 1.5rem}
+@media (min-width:640px){ .formats{padding:6rem 2.5rem} }
+.formats-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:2.5rem}
+@media (min-width:1024px){
+  .formats-layout{grid-template-columns:repeat(12,minmax(0,1fr));gap:3rem}
+  .about-card{grid-column:span 4}
+  .formats-main{grid-column:span 8}
+}
+#formats-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
+.format-list{margin-top:2.5rem}
+.format-list{margin-left:-1.25rem;margin-right:-1.25rem}
+.format-row{position:relative;display:block;border-top:1px solid var(--hairline);overflow:hidden}
+.format-list li:last-child .format-row{border-bottom:1px solid var(--hairline)}
+/* the whole row fills with ink, wiping upward */
+.format-row::before{
+  content:"";position:absolute;inset:0;background:var(--ink);z-index:0;
+  transform:translateY(100%);
+  transition:transform 520ms cubic-bezier(0.16,1,0.3,1);
+}
+.format-inner{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:1.5rem;padding:1.75rem 1.25rem;
+  will-change:transform,opacity;transition:color 320ms ease;
+}
+@media (hover:hover){
+  .format-row:hover::before,.format-row:focus-visible::before{transform:translateY(0)}
+  .format-row:hover .format-inner,.format-row:focus-visible .format-inner{color:var(--on-ink)}
+  .format-row:hover .format-index,.format-row:focus-visible .format-index,
+  .format-row:hover .format-desc,.format-row:focus-visible .format-desc{color:rgba(246,241,232,0.72)}
+  .format-row:hover .format-arrow,.format-row:focus-visible .format-arrow{border-color:rgba(246,241,232,0.45)}
+}
+.format-index{width:2.5rem;flex:none;font-size:1.125rem;font-weight:500;color:var(--ink-soft);transition:color 320ms ease}
+.format-copy{flex:1;min-width:0}
+.format-name{display:block;font-size:1.5rem;font-weight:500;letter-spacing:-0.02em}
+@media (min-width:640px){ .format-name{font-size:1.875rem} }
+.format-desc{display:block;font-size:1.125rem;color:var(--ink-soft);margin-top:0.25rem;transition:color 320ms ease}
+.format-arrow{
+  width:2.75rem;height:2.75rem;flex:none;display:grid;place-items:center;
+  border-radius:var(--radius-pill);border:1px solid var(--hairline);
+  transition:border-color 320ms ease;
+}
+.format-arrow svg{width:1.25rem;height:1.25rem;will-change:transform,opacity}
+
+/* ============================================================
+   Who it's for
+   ============================================================ */
+.forwhom{
+  background:var(--background);border-radius:var(--radius-card-lg);
+  margin-top:-2.5rem;position:relative;z-index:1;
+  padding:4rem 1.5rem 5rem;
+}
+@media (min-width:640px){ .forwhom{padding:4rem 2.5rem 5rem} }
+.fw-grid{display:grid;grid-template-columns:1fr;gap:2.5rem;align-items:end}
+@media (min-width:768px){ .fw-grid{grid-template-columns:1fr 1fr} }
+.fw-intro{max-width:24rem}
+.fw-icon{width:4rem;height:4rem;border-radius:var(--radius-card);object-fit:cover;will-change:transform,opacity}
+#forwhom-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1.5rem}
+.fw-body{font-size:1.125rem;color:var(--ink-soft);max-width:20rem;margin-top:1.5rem;line-height:1.7}
+
+.fw-cards{display:flex;align-items:flex-end;gap:1.25rem}
+.fw-card{flex:1;min-width:0;will-change:transform,opacity}
+.fw-card--2{margin-bottom:2rem}
+.fw-tile{position:relative;display:block;aspect-ratio:3/4;border-radius:var(--radius-card);overflow:hidden;background:var(--surface)}
+.fw-tile img{width:100%;height:100%;object-fit:cover;will-change:transform}
+.fw-cap{
+  position:absolute;left:0.75rem;right:0.75rem;bottom:0.75rem;
+  border-radius:var(--radius-xl);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  color:var(--on-ink);padding:0.75rem 1rem;
+}
+.fw-cap--sage{background:rgba(140,154,128,0.72)}
+.fw-cap--clay{background:rgba(42,37,33,0.55)}
+.fw-cap b{display:block;font-size:1.125rem;font-weight:500}
+.fw-cap span{display:block;font-size:0.875rem;opacity:0.9;margin-top:0.125rem}
+
+/* ============================================================
+   Facts band (dark)
+   ============================================================ */
+/* two separate dark cards sharing one row: numbers 9 columns, links 3 */
+.dark-row{display:grid;grid-template-columns:minmax(0,1fr);gap:0.75rem;margin-top:0.75rem}
+@media (min-width:1024px){
+  .dark-row{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .facts{grid-column:span 9}
+  .socials-band{grid-column:span 3}
+}
+.facts{
+  background:var(--ink);color:var(--on-ink);
+  border-radius:var(--radius-card-lg);
+  padding:3.5rem 1.5rem;
+}
+@media (min-width:640px){ .facts{padding:4rem 2.5rem} }
+#facts-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
+.facts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2rem;row-gap:2.5rem;margin-top:3rem}
+@media (min-width:1280px){ .facts-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.fact-value--word{overflow-wrap:anywhere}
+.fact{border-top:1px solid rgba(246,241,232,0.2);padding-top:1.25rem;will-change:transform,opacity}
+.fact-value{display:block;font-size:3.75rem;font-weight:500;letter-spacing:-0.02em;line-height:1}
+@media (min-width:640px){ .fact-value{font-size:4.5rem} }
+.fact-value--word{font-size:2.25rem}
+@media (min-width:640px){ .fact-value--word{font-size:2.75rem} }
+.fact-label{display:block;font-size:1.125rem;color:rgba(246,241,232,0.65);margin-top:0.75rem}
+
+/* the social links keep their own dark card beside the numbers */
+.socials-band{
+  background:var(--ink);color:var(--on-ink);
+  border-radius:var(--radius-card-lg);
+  padding:2.5rem 1.5rem;
+  display:flex;
+}
+@media (min-width:640px){ .socials-band{padding:2.5rem} }
+.socials{display:flex;flex-direction:column;gap:1.25rem;width:100%}
+@media (min-width:768px) and (max-width:1023px){
+  .socials{flex-direction:row;align-items:center;justify-content:space-between}
+}
+@media (min-width:1024px){ .socials{justify-content:center} .socials-list{flex-direction:column;flex-wrap:nowrap} }
+.socials-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;color:var(--on-ink)}
+.socials-list{display:flex;flex-wrap:wrap;gap:0.75rem}
+
+.social-logo{width:1.5rem;height:1.5rem;flex:none;border-radius:var(--radius-pill);object-fit:cover;background:var(--on-ink)}
+.socials-list a{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  border:1px solid rgba(246,241,232,0.25);border-radius:var(--radius-pill);
+  padding:0.625rem 1.125rem;font-size:1.125rem;
+  transition:background-color 220ms ease,border-color 220ms ease,color 220ms ease;
+}
+.socials-list a:hover{background:var(--on-ink);border-color:var(--on-ink);color:var(--ink)}
+.socials-list svg{width:1.125rem;height:1.125rem;flex:none}
+
+/* ============================================================
+   Letter (her own words)
+   ============================================================ */
+.letter{background:var(--background);padding:5rem 1.5rem}
+@media (min-width:640px){ .letter{padding:6rem 2.5rem} }
+#letter-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
+.letter{padding-top:4rem}
+.letter-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:2.5rem;align-items:start}
+@media (min-width:1024px){
+  .letter-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:3rem;align-items:stretch}
+}
+.letter-head{align-self:start}
+.letter-photo{
+  border-radius:var(--radius-card);overflow:hidden;aspect-ratio:3/4;
+  background:var(--surface);will-change:transform,opacity;min-width:0;
+}
+/* photo 4 columns, heading 3, text 5 — declared after the base rule above so
+   `aspect-ratio:auto` wins; with 3/4 still applied the figure would size itself
+   from the row height and spill over the heading */
+@media (min-width:1024px){
+  .letter-photo{grid-column:span 4;aspect-ratio:auto;height:100%}
+  .letter-head{grid-column:span 3}
+  .letter-body{grid-column:span 5}
+}
+.letter-photo img,.letter-photo video{width:100%;height:100%;object-fit:cover;display:block}
+.letter-body{max-width:38rem;will-change:transform,opacity}
+.letter-body p{font-size:1.1875rem;line-height:1.75;color:var(--ink)}
+.letter-body p + p{margin-top:1.25rem}
+.letter-body ul + p{margin-top:1.25rem}
+.letter-body ul{margin-top:1.25rem;display:flex;flex-direction:column;gap:0.875rem}
+.letter-body li{
+  font-size:1.1875rem;line-height:1.7;padding-left:1.5rem;position:relative;color:var(--ink);
+}
+.letter-body li::before{
+  content:"";position:absolute;left:0;top:0.72em;
+  width:0.5rem;height:0.5rem;border-radius:var(--radius-pill);background:var(--brand);
+}
+.letter-lead{
+  font-size:1.5rem;line-height:1.5;font-weight:500;letter-spacing:-0.01em;
+}
+.letter-sign{
+  margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--hairline);
+  font-size:1.125rem;color:var(--ink-soft);
+}
+
+/* ============================================================
+   Dance block
+   ============================================================ */
+.dance{
+  background:var(--surface);border-radius:var(--radius-card-lg);
+  margin-top:0.75rem;padding:3.5rem 1.5rem;
+}
+@media (min-width:640px){ .dance{padding:4rem 2.5rem} }
+.dance-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:center}
+@media (min-width:768px){ .dance-grid{grid-template-columns:1.4fr 1fr;gap:3rem} }
+#dance-title{font-size:2.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
+@media (min-width:640px){ #dance-title{font-size:3rem} }
+.dance-body{font-size:1.125rem;color:var(--ink-soft);line-height:1.7;margin-top:1.25rem;max-width:32rem}
+.dance-photo{
+  border-radius:var(--radius-card);overflow:hidden;aspect-ratio:4/3;
+  background:var(--background);will-change:transform,opacity;
+}
+.dance-photo img{width:100%;height:100%;object-fit:cover}
+.dance-note{
+  margin-top:1.5rem;font-size:0.875rem;color:var(--ink-soft);
+  border-left:2px solid var(--brand);padding-left:0.75rem;line-height:1.6;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer{
+  background:var(--ink);color:var(--on-ink);
+  border-radius:var(--radius-card-lg);margin-top:0.75rem;
+  padding:3.5rem 1.5rem;
+}
+@media (min-width:640px){ .footer{padding:4rem 2.5rem} }
+
+.footer-cta{border-bottom:1px solid rgba(246,241,232,0.15);padding-bottom:3.5rem;display:flex;flex-direction:column;gap:1.5rem}
+@media (min-width:640px){ .footer-cta{flex-direction:row;justify-content:space-between;align-items:flex-end} }
+.footer-cta p{font-size:3.75rem;font-weight:500;line-height:0.92;letter-spacing:-0.02em;margin-top:1rem}
+.footer-cta .pill{will-change:transform,opacity}
+
+.footer-cols{padding:3.5rem 0;display:grid;grid-template-columns:1fr;gap:2.5rem}
+@media (min-width:768px){ .footer-cols{grid-template-columns:1.4fr 1fr 1fr 1fr} }
+.footer-brand{max-width:20rem}
+.footer-brand-row{display:flex;align-items:center;gap:0.5rem;font-size:1.1875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em}
+.footer-blurb{font-size:1.125rem;color:rgba(246,241,232,0.65);margin-top:1rem;line-height:1.6}
+.footer-col h3{font-size:0.875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em;color:rgba(246,241,232,0.5)}
+.footer-col ul{margin-top:1rem;font-size:1.125rem;color:rgba(246,241,232,0.8);display:flex;flex-direction:column;gap:0.75rem}
+.footer-col a:hover{color:var(--on-ink);text-decoration:underline}
+
+.footer-bottom{
+  border-top:1px solid rgba(246,241,232,0.15);padding-top:2rem;
+  font-size:1.125rem;color:rgba(246,241,232,0.6);
+  display:flex;flex-direction:column;gap:1.25rem;
+}
+@media (min-width:640px){ .footer-bottom{flex-direction:row;justify-content:space-between;align-items:center} }
+.footer-bottom nav{display:flex;gap:1.25rem;flex-wrap:wrap}
+.footer-bottom a:hover{color:var(--on-ink)}
+.footer-credit a{text-decoration:underline;text-underline-offset:0.15em}
+
+.covent{display:inline-flex;align-items:center;gap:0.75rem}
+.covent-by{font-size:0.875rem;color:rgba(246,241,232,0.45)}
+.covent-logo{
+  height:1.75rem;width:auto;border-radius:0.375rem;display:block;
+  opacity:0.9;transition:opacity 220ms ease;
+}
+.covent:hover .covent-logo{opacity:1}
+
+/* ============================================================
+   Menu overlay
+   ============================================================ */
+.menu{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;pointer-events:none}
+.menu.is-open{pointer-events:auto}
+.menu-backdrop{position:absolute;inset:0;background:var(--background);opacity:0}
+.menu-panel{position:relative;flex:1;display:flex;flex-direction:column;color:var(--ink-deep);padding:var(--page-inset);opacity:0;will-change:transform,opacity}
+.menu-inner{flex:1;display:flex;flex-direction:column;padding:1.5rem}
+@media (min-width:640px){ .menu-inner{padding:2rem 2.5rem 2.5rem} }
+.menu-top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.menu-brand{display:flex;align-items:center;gap:0.5rem;font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em}
+.icon-close{
+  width:2.5rem;height:2.5rem;flex:none;display:grid;place-items:center;
+  border-radius:var(--radius-pill);background:rgba(246,241,232,0.15);
+  transition:background-color 220ms ease;
+}
+.icon-close:hover{background:rgba(246,241,232,0.25)}
+.icon-close svg{width:1.25rem;height:1.25rem;will-change:transform}
+/* the menu sits on linen, so its chrome flips to ink */
+.menu .icon-close{background:rgba(42,37,33,0.1);color:var(--ink-deep)}
+.menu .icon-close:hover{background:rgba(42,37,33,0.2)}
+.menu-nav{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0.5rem}
+.menu-nav a{display:block;font-size:2.25rem;font-weight:500;letter-spacing:-0.02em;line-height:1.15;transition:color 220ms ease;will-change:transform,opacity}
+@media (min-width:640px){ .menu-nav a{font-size:4rem} }
+.menu-nav a:hover{color:var(--brand)}
+.menu-bottom{border-top:1px solid rgba(42,37,33,0.15);padding-top:2rem;display:flex;flex-direction:column;gap:1.25rem}
+@media (min-width:640px){ .menu-bottom{flex-direction:row;justify-content:space-between;align-items:center} }
+.menu-social{display:flex;gap:1.25rem;font-size:1.125rem;color:var(--ink-soft);align-items:center}
+.menu-social a:hover{color:var(--ink-deep)}
+.menu .lang button[aria-pressed="true"]{background:rgba(42,37,33,0.12)}
+.menu .pill--light{background:var(--ink);color:var(--on-ink)}
+.menu .pill--light:hover{background:var(--brand);color:var(--on-ink)}
+
+/* ============================================================
+   Sticky booking CTA
+   ============================================================ */
+.sticky-cta{
+  position:fixed;left:50%;bottom:calc(1.25rem + env(safe-area-inset-bottom));
+  z-index:60;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  border-radius:var(--radius-pill);
+  background:var(--ink);color:var(--on-ink);
+  padding:0.875rem 1.75rem;
+  font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;
+  box-shadow:0 1rem 2.5rem rgba(42,37,33,0.3);
+  transform:translate(-50%,150%);opacity:0;pointer-events:none;
+  transition:transform 460ms cubic-bezier(0.16,1,0.3,1),opacity 300ms ease,background-color 220ms ease;
+}
+.sticky-cta.is-visible{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+.sticky-cta:hover{background:var(--brand)}
+.sticky-cta svg{width:1rem;height:1rem;flex:none}
+/* line the button up with the bottom edge of the time card; only from the width
+   where the centred button clears the right-hand card */
+@media (min-width:1100px){
+  .sticky-cta{bottom:calc(var(--page-inset) + 2.5rem)}
+}
+@media (prefers-reduced-motion:reduce){ .sticky-cta{transition:opacity 200ms ease} }
+
+/* ============================================================
+   Loader
+   ============================================================ */
+.loader{
+  position:fixed;inset:0;z-index:200;
+  background:var(--background);color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  will-change:transform;
+}
+.loader-mark{
+  display:flex;align-items:center;gap:0.75rem;
+  font-size:1.5rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em;
+  opacity:0;will-change:transform,opacity;text-align:center;
+}
+.loader-mark svg{width:1.75rem;height:1.75rem;flex:none}
+.loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
+.loader-fill{display:block;width:100%;height:100%;background:var(--brand);transform:scaleX(0);transform-origin:left}
+</style>
+</head>
+
+<body>
+
+<main>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-plate" aria-hidden="true">
+      <div class="hero-plate-inner" id="hero-plate-inner">
+        <picture>
+          <!-- the wide plate is a near-square frame; a portrait crop reads far better on phones -->
+          <source media="(max-width: 640px)" srcset="assets/hero-mobile.jpg" />
+          <img src="assets/hero.jpg" data-i18n-alt="hero.alt" alt="" loading="eager" fetchpriority="high" decoding="async" />
+        </picture>
+      </div>
+      <div class="hero-plate-grad"></div>
+    </div>
+
+    <header class="site-header">
+      <nav class="hdr-nav" data-i18n-aria="a11y.primaryNav" aria-label="Navigation">
+        <a href="#about" data-scroll data-i18n="nav.about"></a>
+        <a href="#formats" data-scroll data-i18n="nav.formats"></a>
+        <a href="#forwhom" data-scroll data-i18n="nav.forwhom"></a>
+      </nav>
+
+      <div class="hdr-brand">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <span data-i18n="brand"></span>
+      </div>
+
+      <div class="hdr-right">
+        <div class="lang" data-i18n-aria="a11y.lang" aria-label="Language">
+          <button type="button" data-lang="uk" aria-pressed="true">UA</button>
+          <span>/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button type="button" class="burger" data-open-menu data-i18n-aria="a11y.openMenu" aria-label="Menu">
+          <i></i><i></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="hero-title-wrap">
+      <h1 id="hero-title" data-i18n="hero.title" data-reveal="words"></h1>
+    </div>
+
+    <div class="hero-bottom">
+      <p class="hero-tagline" id="hero-tagline" data-i18n="hero.tagline" data-reveal="lines"></p>
+
+      <div class="hero-cluster">
+        <article class="nextclass js-rev" id="nextclass">
+          <div class="nextclass-left">
+            <span class="nextclass-time">
+              <span class="nextclass-value" id="nextclass-value">19:30</span>
+              <button type="button" class="info" id="tz-info" aria-describedby="tz-tip" data-i18n-aria="hero.tzLabel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.1"/>
+                </svg>
+                <span class="info-tip" id="tz-tip" role="tooltip"></span>
+              </button>
+            </span>
+            <span class="nextclass-cet" data-i18n="hero.sourceTime"></span>
+            <span class="nextclass-caption">
+              <span id="nextclass-day"></span>
+              <span data-i18n="hero.online"></span>
+            </span>
+          </div>
+          <img src="assets/online.jpg" data-i18n-alt="hero.nextClassAlt" alt="" loading="lazy" decoding="async" />
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="about-stage">
+    <h2 id="about-title">
+      <span class="ghost-row">
+        <span class="gw" data-gw="0"><span class="clip"><span></span></span></span>
+        <span class="gw" data-gw="1"><span class="clip"><span></span></span></span>
+      </span>
+      <span class="ghost-row">
+        <span class="gw gw--ink" data-gw="2"><span class="clip"><span></span></span></span>
+        <span class="gw" data-gw="3"><span class="clip"><span></span></span></span>
+      </span>
+    </h2>
+
+    <div class="about-photo">
+      <div class="about-photo-motion js-rev" id="about-photo-motion">
+        <figure class="about-photo-fig">
+          <img id="about-img" src="" alt="" loading="lazy" decoding="async" />
+          <figcaption class="photo-cap">
+            <b id="about-cap-title"></b>
+            <span id="about-cap-sub"></span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    </div>
+
+    <div class="about-controls">
+      <button type="button" class="abtn abtn--outline" id="about-prev" data-i18n-aria="a11y.prev" aria-label="Previous">
+        <svg class="abtn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M11 6l-6 6 6 6"/>
+        </svg>
+      </button>
+
+      <div class="dots dots--dark" id="about-dots" data-i18n-aria="a11y.slides" aria-label="Slides"></div>
+
+      <button type="button" class="abtn abtn--solid" id="about-next" data-i18n-aria="a11y.next" aria-label="Next">
+        <svg class="abtn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== FORMATS ===================== -->
+  <section class="formats" id="formats" aria-labelledby="formats-title">
+    <div class="formats-layout">
+      <article class="about-card js-rev" id="badge-card">
+        <h3 data-i18n="about.cardTitle"></h3>
+        <p data-i18n="about.cardBody"></p>
+      </article>
+
+      <div class="formats-main">
+        <span class="eyebrow eyebrow--dark" data-i18n="formats.eyebrow"></span>
+        <h2 id="formats-title" data-i18n="formats.title" data-reveal="lines"></h2>
+        <ul class="format-list" id="format-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WHO IT'S FOR ===================== -->
+  <section class="forwhom" id="forwhom" aria-labelledby="forwhom-title">
+    <div class="fw-grid">
+      <div class="fw-intro">
+        <img class="fw-icon js-rev" id="fw-icon" src="assets/books-1.jpg" data-i18n-alt="forwhom.iconAlt" alt="" loading="lazy" decoding="async" />
+        <h2 id="forwhom-title" data-i18n="forwhom.title" data-reveal="lines"></h2>
+        <p class="fw-body" id="fw-body" data-i18n="forwhom.body" data-reveal="wordfade"></p>
+      </div>
+
+      <div class="fw-cards">
+        <figure class="fw-card js-rev" data-fw="0">
+          <span class="fw-tile" data-hover-scale>
+            <img src="assets/sea-1.jpg" data-i18n-alt="forwhom.card1Alt" alt="" loading="lazy" decoding="async" />
+            <figcaption class="fw-cap fw-cap--sage">
+              <b data-i18n="forwhom.card1Title"></b>
+              <span data-i18n="forwhom.card1Desc"></span>
+            </figcaption>
+          </span>
+        </figure>
+
+        <figure class="fw-card fw-card--2 js-rev" data-fw="1">
+          <span class="fw-tile" data-hover-scale>
+            <img src="assets/studio-2.jpg" data-i18n-alt="forwhom.card2Alt" alt="" loading="lazy" decoding="async" />
+            <figcaption class="fw-cap fw-cap--clay">
+              <b data-i18n="forwhom.card2Title"></b>
+              <span data-i18n="forwhom.card2Desc"></span>
+            </figcaption>
+          </span>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FACTS + SOCIALS ===================== -->
+  <div class="dark-row">
+  <section class="facts" aria-labelledby="facts-title">
+    <h2 id="facts-title" data-i18n="facts.title" data-reveal="lines"></h2>
+    <dl class="facts-grid" id="facts-grid"></dl>
+  </section>
+
+  <!-- ===================== SOCIAL BAND ===================== -->
+  <section class="socials-band">
+    <div class="socials">
+      <h2 class="socials-title" id="socials-title" data-i18n="facts.socialLabel" data-reveal="lines"></h2>
+      <nav class="socials-list" data-i18n-aria="facts.socialLabel" aria-label="Social">
+        <a data-social="inyoga">
+          <img class="social-logo" src="assets/inyoga-logo.png" alt="" width="60" height="60" loading="lazy" decoding="async" />
+          <span>in.yoga</span>
+        </a>
+        <a data-social="instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span>Instagram</span>
+        </a>
+        <a data-social="youtube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="2.5" y="5.5" width="19" height="13" rx="4"/>
+            <path d="M10.6 9.9l4.8 2.1-4.8 2.1z" fill="currentColor" stroke="none"/>
+          </svg>
+          <span>YouTube</span>
+        </a>
+      </nav>
+    </div>
+  </section>
+  </div>
+
+  <!-- ===================== LETTER ===================== -->
+  <section class="letter" id="letter" aria-labelledby="letter-title">
+    <div class="letter-grid">
+      <figure class="letter-photo js-rev" id="letter-photo">
+        <video src="assets/letter.mp4" poster="assets/letter-poster.jpg"
+               autoplay muted loop playsinline preload="metadata"
+               data-i18n-aria="letter.photoAlt"></video>
+      </figure>
+
+      <div class="letter-head">
+        <h2 id="letter-title" data-i18n="letter.title" data-reveal="lines"></h2>
+      </div>
+
+      <div class="letter-body js-rev" id="letter-body">
+        <p class="letter-lead" data-i18n="letter.lead"></p>
+        <p data-i18n="letter.p1"></p>
+        <p data-i18n="letter.p2"></p>
+        <ul>
+          <li data-i18n="letter.li1"></li>
+          <li data-i18n="letter.li2"></li>
+        </ul>
+        <p data-i18n="letter.p3"></p>
+        <p class="letter-sign" data-i18n="letter.sign"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DANCE ===================== -->
+  <section class="dance" id="dance" aria-labelledby="dance-title">
+    <div class="dance-grid">
+      <div>
+        <span class="eyebrow eyebrow--dark" data-i18n="dance.eyebrow"></span>
+        <h2 id="dance-title" data-i18n="dance.title" data-reveal="lines"></h2>
+        <p class="dance-body" data-i18n="dance.body"></p>
+        <p class="dance-note" data-i18n="dance.note"></p>
+      </div>
+      <figure class="dance-photo js-rev" id="dance-photo">
+        <img src="assets/lifestyle.jpg" data-i18n-alt="dance.photoAlt" alt="" loading="lazy" decoding="async" />
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" id="contact">
+    <div class="footer-cta">
+      <div>
+        <p id="footer-cta-title" data-i18n="footer.title" data-reveal="lines"></p>
+      </div>
+      <a class="pill pill--light js-rev" id="footer-pill" data-tg>
+        <span data-i18n="cta.book"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="footer-cols">
+      <div class="footer-brand">
+        <div class="footer-brand-row">
+          <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+          </svg>
+          <span data-i18n="brand"></span>
+        </div>
+        <p class="footer-blurb" data-i18n="footer.blurb"></p>
+      </div>
+
+      <nav class="footer-col" data-i18n-aria="footer.colFormats" aria-label="Formats">
+        <h3 data-i18n="footer.colFormats"></h3>
+        <ul>
+          <li><a href="#formats" data-scroll data-i18n="formats.r1Name"></a></li>
+          <li><a href="#formats" data-scroll data-i18n="formats.r2Name"></a></li>
+          <li><a href="#formats" data-scroll data-i18n="formats.r3Name"></a></li>
+          <li><a href="#dance" data-scroll data-i18n="formats.r4Name"></a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" data-i18n-aria="footer.colAbout" aria-label="About">
+        <h3 data-i18n="footer.colAbout"></h3>
+        <ul>
+          <li><a href="#about" data-scroll data-i18n="nav.about"></a></li>
+          <li><a href="#forwhom" data-scroll data-i18n="nav.forwhom"></a></li>
+          <li><a href="#letter" data-scroll data-i18n="nav.letter"></a></li>
+          <li><a href="#dance" data-scroll data-i18n="nav.dance"></a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" data-i18n-aria="footer.colContact" aria-label="Contact">
+        <h3 data-i18n="footer.colContact"></h3>
+        <ul>
+          <li><a data-tg data-i18n="footer.tgBook"></a></li>
+          <li><a href="https://www.in.yoga/olena-pihulya/" target="_blank" rel="noopener noreferrer" data-i18n="footer.inyoga"></a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <span data-i18n="footer.copy"></span>
+      <span class="footer-credit">
+        <span data-i18n="footer.creditPre"></span>
+        <a href="https://viktoriia-ilieva-photographer.com/" target="_blank" rel="noopener noreferrer" data-i18n="footer.photographer"></a>
+      </span>
+      <a class="covent" data-covent>
+        <span class="covent-by" data-i18n="footer.madeBy"></span>
+        <img class="covent-logo" src="assets/covent-ai.svg" alt="Covent AI" width="350" height="95" loading="lazy" decoding="async" />
+      </a>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ===================== STICKY BOOKING CTA ===================== -->
+<a class="sticky-cta" id="sticky-cta" data-tg>
+  <span data-i18n="cta.book"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M5 12h14M13 6l6 6-6 6"/>
+  </svg>
+</a>
+
+<!-- ===================== MENU OVERLAY ===================== -->
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="menu-backdrop" id="menu-backdrop"></div>
+  <div class="menu-panel" id="menu-panel">
+    <div class="menu-inner">
+      <div class="menu-top">
+        <div class="menu-brand">
+          <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+          </svg>
+          <span data-i18n="brand"></span>
+        </div>
+        <button type="button" class="icon-close" id="menu-close" data-i18n-aria="a11y.closeMenu" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="menu-nav" id="menu-nav" data-i18n-aria="a11y.menu" aria-label="Menu">
+        <a href="#about" data-scroll data-close-menu data-i18n="nav.about"></a>
+        <a href="#formats" data-scroll data-close-menu data-i18n="nav.formats"></a>
+        <a href="#forwhom" data-scroll data-close-menu data-i18n="nav.forwhom"></a>
+        <a href="#letter" data-scroll data-close-menu data-i18n="nav.letter"></a>
+        <a href="#dance" data-scroll data-close-menu data-i18n="nav.dance"></a>
+      </nav>
+
+      <div class="menu-bottom">
+        <a class="pill pill--light" data-tg>
+          <span data-i18n="cta.book"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </a>
+        <div class="menu-social">
+          <div class="lang lang--on-ink" data-i18n-aria="a11y.lang" aria-label="Language">
+            <button type="button" data-lang="uk" aria-pressed="true">UA</button>
+            <span>/</span>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+          <a href="https://www.in.yoga/olena-pihulya/" target="_blank" rel="noopener noreferrer" data-i18n="footer.inyoga"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LOADER ===================== -->
+<div class="loader" id="loader">
+  <div class="loader-mark" id="loader-mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+    </svg>
+    <span data-i18n="brand"></span>
+  </div>
+  <div class="loader-track">
+    <span class="loader-fill" id="loader-fill"></span>
+  </div>
+</div>
+
+<script type="module">
+import Lenis from 'lenis';
+
+/* ============================================================
+   >>> SET THESE TWO <<<
+   TELEGRAM — the booking bot link. Placeholder until the real
+   @username is known; every "book" CTA on the page reads it.
+   BRAND    — the wordmark, per language. Swap when the domain /
+   name is decided (olenapikhulia.yoga | yogawitholena | joinmeto.yoga).
+   ============================================================ */
+const TELEGRAM = 'https://t.me/CHANGE_ME_BOT';
+
+/* Social profiles. in.yoga is known; the other two are placeholders until the
+   real handles are supplied. */
+const SOCIAL = {
+  inyoga:    'https://www.in.yoga/olena-pihulya/',
+  instagram: 'https://www.instagram.com/CHANGE_ME',
+  youtube:   'https://www.youtube.com/@CHANGE_ME',
+};
+
+/* Site credit */
+const COVENT_URL = 'https://coventpro.ai/?utm_source=olenapikhulia.yoga&utm_medium=referral&utm_campaign=site_footer&utm_content=made_by';
+
+/* ============================================================
+   Copy — Ukrainian / English
+   ============================================================ */
+const T = {
+  uk: {
+    brand: 'Олена Піхуля',
+    cta: { book: 'Записатися' },
+    nav: { about: 'Про мене', formats: 'Формати', forwhom: 'Кому підійде', letter: 'Лист до тебе', dance: 'Танець' },
+    a11y: { primaryNav: 'Основна навігація', lang: 'Мова', openMenu: 'Відкрити меню', closeMenu: 'Закрити меню', menu: 'Меню', slides: 'Слайди', prev: 'Попередній слайд', next: 'Наступний слайд' },
+
+    hero: {
+      title: 'Точка опори',
+      tagline: 'Навіть коли весь|світ перевертається',
+      alt: 'Олена Піхуля виконує асану в студії',
+      online: 'онлайн',
+      sourceTime: '18:30 CET',
+      tzNote: 'Час показано у вашому часовому поясі ({tz}). Початок заняття — 18:30 CET, і ця точка не змінюється.',
+      tzLabel: 'Про часовий пояс',
+      nextClassAlt: 'Олена Піхуля проводить онлайн-заняття',
+    },
+
+
+    about: {
+      cardTitle: 'Про мене',
+      cardBody: 'Практикую 19 років, викладаю 9. Психологиня за освітою, лінгвістка й перекладачка — працюю із санскритом і перекладаю йогічні першоджерела. Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям.',
+      photos: [
+        { img: 'assets/studio-1.jpg', title: 'Свідома практика', sub: 'Тіло як точка входу', alt: 'Асана з поворотом хребта' },
+        { img: 'assets/sunset-2.jpg', title: 'Жива практика', sub: 'Асана і рівновага', alt: 'Асана з бічним нахилом у студії' },
+        { img: 'assets/books-2.jpg', title: 'Першоджерела', sub: 'Санскрит і тексти', alt: 'Олена з книжками та килимком для йоги' },
+      ],
+      ghost: [
+        ['Бачити', 'Красу', 'Світу', 'Щодня'],
+        ['Рухатись', 'Зростати', 'Яскраво', 'Жити'],
+        ['Тіло', 'Дихання', 'Увага', 'Смисл'],
+      ],
+    },
+
+    formats: {
+      eyebrow: 'Формати занять',
+      title: 'Обери свій|формат',
+      r1Name: 'Групова практика онлайн', r1Desc: 'Щосереди о 19:30 (18:30 CET). Заняття проходять онлайн.',
+      r2Name: 'Індивідуальне заняття', r2Desc: 'Персональна програма під твій запит, тіло і графік. Онлайн.',
+      r3Name: 'Практика наживо', r3Desc: 'Швеція та Данія — за домовленістю.',
+      r4Name: 'Танець і Natya-yoga', r4Desc: 'Йога для танцівників: робота з формою, ритмом і виразністю.',
+    },
+
+    forwhom: {
+      title: 'Для тих,|хто готовий|рухатися',
+      body: 'Для тих, хто готовий рухатися, зростати і переходити на яскраву сторону сили. Не потрібні ні гнучкість, ні попередній досвід — потрібні увага і трохи регулярності.',
+      iconAlt: 'Книжки й килимок для йоги',
+      card1Title: 'Початківцям', card1Desc: 'Почнемо з тіла й дихання, без вимог до розтяжки.',
+      card1Alt: 'Сидяча поза на килимку в студії',
+      card2Title: 'Тим, хто вже практикує', card2Desc: 'Поглиблення: асана, пранаяма, робота з увагою.',
+      card2Alt: 'Асана в студії',
+    },
+
+    facts: {
+      title: 'Досвід,|який відчутно',
+      items: [
+        { v: '19', l: 'років особистої практики', word: false },
+        { v: '9', l: 'років викладання йоги', word: false },
+        { v: 'Санскрит', l: 'перекладаю йогічні першоджерела', word: true },
+        { v: 'Онлайн', l: 'практика з будь-якої точки світу', word: true },
+      ],
+      socialLabel: 'Де мене|знайти',
+    },
+
+    letter: {
+      title: 'Аліса|і таємна зала',
+      photoAlt: 'Практика на набережній на заході сонця',
+      lead: 'Відчуваєш себе, як Аліса в таємній залі, де було багато дверей і столик із ключиком?..',
+      p1: 'Із чогось маленького й тісного вже давно виріс, а до чогось більшого й складнішого намагаєшся дотягнутися, але не знаєш, як?',
+      p2: 'Маю для тебе дві новини:',
+      li1: 'Перша: ми не в казці. Тож просто випити солодкий засіб із гламурної пляшечки — не варіант.',
+      li2: 'Друга: інші способи є. Вони складніші — потребують більше часу, уваги й терпіння. Але саме вони поступово відкривають нові двері й дають можливість по-іншому відчути та зрозуміти себе.',
+      p3: 'І якщо ця перспектива викликає в тобі легкий драйв і щиру цікавість — запрошую до нового навчального сезону.',
+      sign: 'Олена',
+    },
+
+    dance: {
+      eyebrow: 'І ще',
+      title: 'Танець',
+      body: 'Танцівниця й викладачка Всеукраїнської федерації танцю, віцепрезидентка львівської секції CID UNESCO, співавторка Natya-yoga — йоги для танцівників. Організовую міжнародні танцювальні конгреси та фестивалі.',
+      note: 'Чернетка: складено з відкритої біографії. Замінимо на твій текст, коли надішлеш.',
+      photoAlt: 'Олена з килимком для йоги',
+    },
+
+    footer: {
+      title: 'Готові|почати?',
+      blurb: 'Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям.',
+      tgBook: 'Telegram — запис на заняття',
+      inyoga: 'Профіль на in.yoga',
+      colFormats: 'Формати', colAbout: 'Про практику', colContact: 'Контакти',
+      copy: '© 2026 Олена Піхуля',
+      creditPre: 'Фото:',
+      photographer: 'Вікторія Ілієва',
+      madeBy: 'Зроблено в',
+    },
+  },
+
+  en: {
+    brand: 'Olena Pikhulia',
+    cta: { book: 'Book a class' },
+    nav: { about: 'About', formats: 'Formats', forwhom: 'Who it’s for', letter: 'A letter to you', dance: 'Dance' },
+    a11y: { primaryNav: 'Primary navigation', lang: 'Language', openMenu: 'Open menu', closeMenu: 'Close menu', menu: 'Menu', slides: 'Slides', prev: 'Previous slide', next: 'Next slide' },
+
+    hero: {
+      title: 'Steady ground',
+      tagline: 'Even when the world|turns upside down',
+      alt: 'Olena Pikhulia practising in the studio',
+      online: 'online',
+      sourceTime: '18:30 CET',
+      tzNote: 'Shown in your time zone ({tz}). The class starts at 18:30 CET — that anchor never moves.',
+      tzLabel: 'About the time zone',
+      nextClassAlt: 'Olena Pikhulia teaching an online class',
+    },
+
+
+    about: {
+      cardTitle: 'About me',
+      cardBody: 'Nineteen years of practice, nine of teaching. A psychologist by training, a linguist and translator — I work with Sanskrit and translate primary yogic texts. I teach yoga as the art of seeing the beauty of the world and living a bright, conscious life.',
+      photos: [
+        { img: 'assets/studio-1.jpg', title: 'Conscious practice', sub: 'The body as the way in', alt: 'A seated spinal twist' },
+        { img: 'assets/sunset-2.jpg', title: 'Living practice', sub: 'Asana and balance', alt: 'A side-angle pose in the studio' },
+        { img: 'assets/books-2.jpg', title: 'Primary sources', sub: 'Sanskrit and texts', alt: 'Olena with books and a yoga mat' },
+      ],
+      ghost: [
+        ['Seeing', 'Beauty', 'Every', 'Day'],
+        ['Moving', 'Growing', 'Living', 'Brightly'],
+        ['Body', 'Breath', 'Attention', 'Meaning'],
+      ],
+    },
+
+    formats: {
+      eyebrow: 'Ways to practise',
+      title: 'Choose your|format',
+      r1Name: 'Group practice online', r1Desc: 'Every Wednesday at 19:30 (18:30 CET), online.',
+      r2Name: 'One-to-one session', r2Desc: 'A programme built around your body, your goals and your schedule. Online.',
+      r3Name: 'In person', r3Desc: 'Sweden and Denmark — by arrangement.',
+      r4Name: 'Dance and Natya yoga', r4Desc: 'Yoga for dancers: form, rhythm and expression.',
+    },
+
+    forwhom: {
+      title: 'For those|ready to|move',
+      body: 'For those ready to move, to grow and to step over to the bright side of the force. You need neither flexibility nor prior experience — only attention and a little regularity.',
+      iconAlt: 'Books and a yoga mat',
+      card1Title: 'Beginners', card1Desc: 'We start with body and breath. No flexibility required.',
+      card1Alt: 'A seated pose on the mat in the studio',
+      card2Title: 'Already practising', card2Desc: 'Going deeper: asana, pranayama, working with attention.',
+      card2Alt: 'A studio asana',
+    },
+
+    facts: {
+      title: 'Experience|you can feel',
+      items: [
+        { v: '19', l: 'years of personal practice', word: false },
+        { v: '9', l: 'years of teaching yoga', word: false },
+        { v: 'Sanskrit', l: 'I translate primary yogic texts', word: true },
+        { v: 'Online', l: 'practise from anywhere in the world', word: true },
+      ],
+      socialLabel: 'Where to|find me',
+    },
+
+    letter: {
+      title: 'Alice|and the hall of doors',
+      photoAlt: 'Practice on a pier at sunset',
+      lead: 'Do you feel like Alice in that secret hall — all those doors, and a little table with a key?..',
+      p1: 'You outgrew something small and narrow a long time ago, and you keep reaching for something larger and harder, but you don’t quite know how?',
+      p2: 'I have two pieces of news for you:',
+      li1: 'First: we are not in a fairy tale. So drinking a sweet potion from a glamorous little bottle is not an option.',
+      li2: 'Second: there are other ways. They are harder — they ask for more time, attention and patience. But they are precisely the ones that open new doors and let you feel and understand yourself differently.',
+      p3: 'And if that prospect stirs a little drive and honest curiosity in you — I invite you to the new season.',
+      sign: 'Olena',
+    },
+
+    dance: {
+      eyebrow: 'One more thing',
+      title: 'Dance',
+      body: 'Dancer and teacher with the All-Ukrainian Dance Federation, vice-president of the Lviv section of CID UNESCO, co-author of Natya yoga — yoga for dancers. I organise international dance congresses and festivals.',
+      note: 'Draft: assembled from the public biography. To be replaced with your own text.',
+      photoAlt: 'Olena with a yoga mat',
+    },
+
+    footer: {
+      title: 'Ready to|begin?',
+      blurb: 'I teach yoga as the art of seeing the beauty of the world and living a bright, conscious life.',
+      tgBook: 'Telegram — book a class',
+      inyoga: 'Profile on in.yoga',
+      colFormats: 'Formats', colAbout: 'Practice', colContact: 'Contact',
+      copy: '© 2026 Olena Pikhulia',
+      creditPre: 'Photography:',
+      photographer: 'Viktoriia Ilieva',
+      madeBy: 'Made at',
+    },
+  },
+};
+
+/* ============================================================
+   Constants
+   ============================================================ */
+const EASE = {
+  easeOutExpo:    'cubic-bezier(0.16, 1, 0.3, 1)',
+  easeOutQuart:   'cubic-bezier(0.25, 1, 0.5, 1)',
+  easeInOutCubic: 'cubic-bezier(0.65, 0, 0.35, 1)',
+};
+const LOADER = { MIN_VISIBLE_MS: 1400, MAX_VISIBLE_MS: 2600, EXIT_MS: 850, FILL_DELAY: 120 };
+const GHOST_STAGGER = 90;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobile = () => window.innerWidth <= 768;
+
+/* ============================================================
+   Lenis + scroll lock
+   ============================================================ */
+const lenis = new Lenis({ smoothWheel: true });
+let scrollLocks = 0;
+function lockScroll() {
+  scrollLocks += 1;
+  if (scrollLocks === 1) { lenis.stop(); document.documentElement.classList.add('is-locked'); }
+}
+function unlockScroll() {
+  scrollLocks = Math.max(0, scrollLocks - 1);
+  if (scrollLocks === 0) { lenis.start(); document.documentElement.classList.remove('is-locked'); }
+}
+window.scrollTo(0, 0);
+
+/* ============================================================
+   Spring helper
+   ============================================================ */
+const MOTIONS = new Set();
+const EPS = { opacity: 0.0006, scale: 0.0006, x: 0.02, y: 0.02, rotate: 0.02 };
+
+function applyTransform(el, p) {
+  let t = '';
+  if (p.x !== undefined) t += `translateX(${p.x}px) `;
+  if (p.y !== undefined) t += `translateY(${p.y}px) `;
+  if (p.scale !== undefined) t += `scale(${p.scale}) `;
+  if (p.rotate !== undefined) t += `rotate(${p.rotate}deg) `;
+  if (t) el.style.transform = t.trim();
+  if (p.opacity !== undefined) el.style.opacity = p.opacity;
+}
+
+class Motion {
+  constructor(el, from, config = {}, apply = applyTransform) {
+    this.el = el; this.apply = apply;
+    this.tension = config.tension ?? 170;
+    this.friction = config.friction ?? 26;
+    this.keys = Object.keys(from);
+    this.props = { ...from }; this.targets = { ...from }; this.vel = {};
+    for (const k of this.keys) this.vel[k] = 0;
+    this.awake = false;
+    MOTIONS.add(this);
+    this.render();
+  }
+  set(state) { for (const k in state) { this.props[k] = state[k]; this.targets[k] = state[k]; this.vel[k] = 0; } this.render(); }
+  to(state) { for (const k in state) this.targets[k] = state[k]; this.awake = true; }
+  step(dt) {
+    if (!this.awake) return;
+    const sub = Math.max(1, Math.ceil(dt * 240));
+    const h = dt / sub;
+    let moving = false;
+    for (const k of this.keys) {
+      let x = this.props[k], v = this.vel[k];
+      const tg = this.targets[k];
+      for (let i = 0; i < sub; i++) {
+        const a = -this.tension * (x - tg) - this.friction * v;
+        v += a * h; x += v * h;
+      }
+      const e = EPS[k] ?? 0.001;
+      if (Math.abs(x - tg) > e || Math.abs(v) > e * 12) moving = true;
+      else { x = tg; v = 0; }
+      this.props[k] = x; this.vel[k] = v;
+    }
+    this.render();
+    if (!moving) this.awake = false;
+  }
+  render() { this.apply(this.el, this.props); }
+}
+
+function inview(el, from, to, config, delayIn = 0, apply) {
+  const m = new Motion(el, from, config, apply);
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      io.disconnect();
+      if (delayIn > 0) setTimeout(() => m.to(to), delayIn); else m.to(to);
+    }
+  }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+  io.observe(el);
+  return m;
+}
+
+function hover(trigger, target, from, to, config, apply) {
+  const m = new Motion(target, from, config, apply);
+  const enter = () => { if (!isMobile()) m.to(to); };
+  const leave = () => m.to(from);
+  trigger.addEventListener('pointerenter', enter);
+  trigger.addEventListener('pointerleave', leave);
+  trigger.addEventListener('focusin', enter);
+  trigger.addEventListener('focusout', leave);
+  return m;
+}
+
+/* ============================================================
+   Scroll parallax
+   ============================================================ */
+const PARALLAX = [];
+function addParallax(measureEl, targetEl, axis, from, to, unit) {
+  PARALLAX.push({ measureEl, targetEl, axis, from, to, unit });
+}
+function updateParallax() {
+  const vh = window.innerHeight;
+  for (const p of PARALLAX) {
+    const r = p.measureEl.getBoundingClientRect();
+    const total = r.height + vh;
+    if (total <= 0) continue;
+    let t = (vh - r.top) / total;
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    p.targetEl.style.transform = `translate${p.axis}(${p.from + (p.to - p.from) * t}${p.unit})`;
+  }
+}
+
+let lastT = performance.now();
+function raf(t) {
+  lenis.raf(t);
+  let dt = (t - lastT) / 1000; lastT = t;
+  if (dt > 0.064) dt = 0.064;
+  if (dt > 0) for (const m of MOTIONS) m.step(dt);
+  updateParallax();
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
+/* ============================================================
+   Reveal primitives
+   ============================================================ */
+function buildParts(host, pieces, kind) {
+  host.textContent = '';
+  const items = [];
+  pieces.forEach((piece, i) => {
+    const clip = document.createElement('span');
+    clip.className = kind === 'lines' ? 'line' : (kind === 'wordfade' ? 'wf' : 'clip');
+    const inner = document.createElement('span');
+    inner.textContent = piece;
+    clip.appendChild(inner);
+    host.appendChild(clip);
+    if (kind !== 'lines' && i < pieces.length - 1) host.appendChild(document.createTextNode(' '));
+    items.push({ clip, inner });
+  });
+  return items;
+}
+
+function play(items, { stagger = 120, duration = 950, easing = EASE.easeOutExpo, delay = 0 } = {}) {
+  if (!items.length) return;
+  items.forEach(({ clip, inner }) => { clip.classList.remove('is-in'); inner.style.transition = 'none'; });
+  void items[0].inner.offsetWidth;
+  items.forEach(({ inner }, i) => {
+    inner.style.transition = `transform ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
+    inner.style.transitionDelay = `${delay + i * stagger}ms`;
+  });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => items.forEach(({ clip }) => clip.classList.add('is-in')));
+  });
+}
+
+function showInstant(items) {
+  items.forEach(({ clip, inner }) => {
+    inner.style.transition = 'none';
+    inner.style.transitionDelay = '0ms';
+    clip.classList.add('is-in');
+  });
+}
+
+/* registry of text-reveal elements, so a language switch can rebuild them */
+const REVEALS = [];
+const REVEAL_OPTS = {
+  'hero-title':       { kind: 'words',    stagger: 140, duration: 1100, easing: EASE.easeOutExpo, gated: true },
+  'hero-tagline':     { kind: 'lines',    stagger: 110, duration: 900,  easing: EASE.easeOutExpo, delay: 350, gated: true },
+  'formats-title':    { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+  'forwhom-title':    { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+  'fw-body':          { kind: 'wordfade', stagger: 28,  duration: 700,  easing: EASE.easeOutQuart, delay: 250 },
+  'facts-title':      { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+  'socials-title':    { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+  'letter-title':     { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+  'dance-title':      { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+  'footer-cta-title': { kind: 'lines',    stagger: 120, duration: 950,  easing: EASE.easeOutExpo },
+};
+
+function splitFor(kind, value) {
+  if (kind === 'lines') return value.split('|');
+  return value.split(/\s+/).filter(Boolean);
+}
+
+/* ============================================================
+   i18n
+   ============================================================ */
+let lang = localStorage.getItem('lang') || 'uk';
+if (!T[lang]) lang = 'uk';
+const t = (path) => path.split('.').reduce((o, k) => (o == null ? o : o[k]), T[lang]);
+
+function applyI18n({ instant }) {
+  document.documentElement.lang = lang;
+  document.title = lang === 'uk' ? 'Олена Піхуля — йоґа онлайн' : 'Olena Pikhulia — yoga online';
+
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const v = t(el.dataset.i18n);
+    if (typeof v !== 'string') return;
+    if (el.dataset.reveal) return; // handled by the reveal registry
+    el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
+    const v = t(el.dataset.i18nAlt);
+    if (typeof v === 'string') el.alt = v;
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    const v = t(el.dataset.i18nAria);
+    if (typeof v === 'string') el.setAttribute('aria-label', v);
+  });
+
+  // reveal-driven text
+  REVEALS.forEach((r) => {
+    const value = t(r.key);
+    if (typeof value !== 'string') return;
+    r.items = buildParts(r.el, splitFor(r.opts.kind, value), r.opts.kind);
+    if (r.opts.gated && !heroReady) return;          // loader still up — keep hidden
+    if (instant || r.fired) showInstant(r.items);
+    else if (r.opts.gated) showInstant(r.items);
+  });
+
+  document.querySelectorAll('.lang button').forEach((b) => {
+    b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+  });
+
+  rebuildFormats();
+  rebuildFacts();
+  paintAbout(aboutIndex, false);
+  renderClassTime();
+  fitAllLines();
+}
+
+function setLang(next) {
+  if (next === lang || !T[next]) return;
+  lang = next;
+  localStorage.setItem('lang', lang);
+  applyI18n({ instant: true });
+}
+document.querySelectorAll('.lang button').forEach((b) => {
+  b.addEventListener('click', () => setLang(b.dataset.lang));
+});
+
+/* ============================================================
+   Telegram CTAs
+   ============================================================ */
+document.querySelectorAll('[data-tg]').forEach((a) => {
+  a.href = TELEGRAM;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+});
+document.querySelectorAll('[data-social]').forEach((a) => {
+  a.href = SOCIAL[a.dataset.social];
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+});
+document.querySelectorAll('[data-covent]').forEach((a) => {
+  a.href = COVENT_URL;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+});
+
+/* ============================================================
+   Hero
+   ============================================================ */
+/* --- class time: anchored to 18:30 in Central Europe, rendered in the
+   visitor's own zone --- */
+const CLASS_TZ = 'Europe/Stockholm';   // the teacher's zone; carries CET/CEST for us
+const CLASS_HOUR = 18, CLASS_MINUTE = 30;
+
+/* how far the given instant sits from UTC inside `tz` */
+function tzOffsetMs(ts, tz) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, hour12: false,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  }).formatToParts(ts).reduce((o, x) => (x.type === 'literal' ? o : (o[x.type] = x.value, o)), {});
+  const asUTC = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour % 24, parts.minute, parts.second);
+  return asUTC - ts;
+}
+
+/* the instant of the next Wednesday 18:30 in CLASS_TZ */
+function nextClassInstant(now = new Date()) {
+  const probe = new Date(now.getTime());
+  for (let i = 0; i < 9; i++) {
+    const y = probe.getUTCFullYear(), m = probe.getUTCMonth(), d = probe.getUTCDate();
+    let ts = Date.UTC(y, m, d, CLASS_HOUR, CLASS_MINUTE);
+    for (let k = 0; k < 3; k++) ts = Date.UTC(y, m, d, CLASS_HOUR, CLASS_MINUTE) - tzOffsetMs(ts, CLASS_TZ);
+    const wd = new Intl.DateTimeFormat('en-US', { timeZone: CLASS_TZ, weekday: 'short' }).format(ts);
+    if (wd === 'Wed' && ts > now.getTime()) return new Date(ts);
+    probe.setUTCDate(probe.getUTCDate() + 1);
+  }
+  return null;
+}
+
+function renderClassTime() {
+  const when = nextClassInstant();
+  const valueEl = document.getElementById('nextclass-value');
+  const dayEl = document.getElementById('nextclass-day');
+  const tipEl = document.getElementById('tz-tip');
+  const locale = lang === 'uk' ? 'uk-UA' : 'en-GB';
+  let zone = 'UTC';
+  try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) { /* keep UTC */ }
+
+  if (when) {
+    valueEl.textContent = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit', hour12: false }).format(when);
+    const day = new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(when);
+    dayEl.textContent = day.charAt(0).toUpperCase() + day.slice(1);
+  }
+  const note = t('hero.tzNote');
+  if (typeof note === 'string') tipEl.textContent = note.replace('{tz}', zone.replace(/_/g, ' '));
+}
+
+const heroSection = document.querySelector('.hero');
+const heroTitleEl = document.getElementById('hero-title');
+addParallax(heroSection, document.getElementById('hero-plate-inner'), 'Y', 0, 12, '%');
+
+/* the display line is set in vw and must not be clipped by its padded box */
+function fitHeroTitle() {
+  heroTitleEl.style.fontSize = '';
+  const avail = heroTitleEl.clientWidth;
+  const natural = heroTitleEl.scrollWidth;
+  if (avail > 0 && natural > avail) {
+    const base = parseFloat(getComputedStyle(heroTitleEl).fontSize);
+    heroTitleEl.style.fontSize = `${base * (avail / natural)}px`;
+  }
+}
+
+/* Stacked display lines are clipped by their reveal mask, so a single long word
+   (Ukrainian sets far longer than English) would silently lose its tail. Scale
+   the block down until the widest line fits. */
+function fitLines(el) {
+  el.style.fontSize = '';
+  const spans = el.querySelectorAll('.line > span');
+  if (!spans.length) return;
+  const avail = el.clientWidth;
+  if (avail <= 0) return;
+  let widest = 0;
+  spans.forEach((s) => { if (s.scrollWidth > widest) widest = s.scrollWidth; });
+  if (widest > avail) {
+    const base = parseFloat(getComputedStyle(el).fontSize);
+    el.style.fontSize = `${base * (avail / widest)}px`;
+  }
+}
+function fitAllLines() {
+  fitHeroTitle();
+  document.querySelectorAll('[data-reveal="lines"]').forEach(fitLines);
+}
+
+/* On phones the hero photo fills the full height, so type at both the top and
+   the bottom would always land on the figure. Move the tagline up under the
+   title and leave the middle of the frame clear. */
+const mqPhone = matchMedia('(max-width: 640px)');
+const taglineEl = document.getElementById('hero-tagline');
+const heroTitleWrap = document.querySelector('.hero-title-wrap');
+const heroBottomEl = document.querySelector('.hero-bottom');
+function placeTagline() {
+  if (mqPhone.matches) {
+    if (taglineEl.parentElement !== heroTitleWrap) heroTitleWrap.appendChild(taglineEl);
+  } else if (taglineEl.parentElement !== heroBottomEl) {
+    heroBottomEl.insertBefore(taglineEl, heroBottomEl.firstChild);
+  }
+  fitAllLines();
+}
+placeTagline();
+mqPhone.addEventListener('change', placeTagline);
+document.fonts.ready.then(fitAllLines);
+window.addEventListener('resize', fitAllLines);
+
+/* ============================================================
+   About carousel + ghost words
+   ============================================================ */
+const aboutSection = document.querySelector('.about');
+const gwEls = [...document.querySelectorAll('#about-title .gw')];
+const gwParallax = [[-3, 3], [3, -3], [-2, 4], [4, -3]];
+gwEls.forEach((el, i) => addParallax(aboutSection, el, 'X', gwParallax[i][0], gwParallax[i][1], '%'));
+const gwItems = gwEls.map((el) => {
+  const clip = el.querySelector('.clip');
+  return { clip, inner: clip.firstElementChild };
+});
+
+const aboutImg = document.getElementById('about-img');
+const aboutCapTitle = document.getElementById('about-cap-title');
+const aboutCapSub = document.getElementById('about-cap-sub');
+const aboutDots = document.getElementById('about-dots');
+let aboutIndex = 0;
+
+function paintAbout(i, animateGhost) {
+  const photos = t('about.photos');
+  const ghost = t('about.ghost');
+  const p = photos[i];
+  aboutImg.src = p.img; aboutImg.alt = p.alt;
+  aboutCapTitle.textContent = p.title;
+  aboutCapSub.textContent = p.sub;
+  gwItems.forEach((it, n) => { it.inner.textContent = ghost[i][n]; });
+  if (animateGhost) play(gwItems, { stagger: GHOST_STAGGER, duration: 700, easing: EASE.easeOutExpo });
+
+  if (aboutDots.children.length !== photos.length) {
+    aboutDots.textContent = '';
+    photos.forEach((_, n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = '<i></i>';
+      b.addEventListener('click', () => goAbout(n));
+      aboutDots.appendChild(b);
+    });
+  }
+  [...aboutDots.children].forEach((b, n) => {
+    b.setAttribute('aria-current', String(n === i));
+    b.setAttribute('aria-label', photos[n].title);
+  });
+}
+
+const aboutPhotoMotion = new Motion(aboutImg, { opacity: 1 }, { tension: 260, friction: 26 });
+let aboutSwapping = false;
+function goAbout(i) {
+  const photos = t('about.photos');
+  const next = (i + photos.length) % photos.length;
+  if (next === aboutIndex || aboutSwapping) return;
+  aboutSwapping = true;
+  aboutPhotoMotion.to({ opacity: 0 });
+  setTimeout(() => {
+    aboutIndex = next;
+    paintAbout(next, true);
+    aboutPhotoMotion.set({ opacity: 0 });
+    aboutPhotoMotion.to({ opacity: 1 });
+    aboutSwapping = false;
+  }, 180);
+}
+document.getElementById('about-prev').addEventListener('click', () => goAbout(aboutIndex - 1));
+document.getElementById('about-next').addEventListener('click', () => goAbout(aboutIndex + 1));
+
+document.querySelectorAll('.abtn').forEach((btn) => {
+  hover(btn, btn.querySelector('.abtn-icon'), { scale: 1 }, { scale: 1.15 }, { tension: 320, friction: 18 });
+});
+
+inview(document.getElementById('badge-card'), { opacity: 0, y: 24 }, { opacity: 1, y: 0 }, { tension: 200, friction: 26 }, 120);
+inview(document.getElementById('about-photo-motion'), { opacity: 0, y: 60, scale: 0.92 }, { opacity: 1, y: 0, scale: 1 }, { tension: 170, friction: 26 });
+
+{
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      io.disconnect();
+      play(gwItems, { stagger: GHOST_STAGGER, duration: 700, easing: EASE.easeOutExpo });
+    }
+  }, { threshold: 0.1 });
+  io.observe(document.getElementById('about-title'));
+}
+
+/* ============================================================
+   Formats list
+   ============================================================ */
+const ARROW_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+const formatList = document.getElementById('format-list');
+const FORMAT_HREFS = [null, null, null, '#dance'];
+
+function rebuildFormats() {
+  formatList.textContent = '';
+  for (let idx = 0; idx < 4; idx++) {
+    const n = idx + 1;
+    const name = t(`formats.r${n}Name`);
+    const desc = t(`formats.r${n}Desc`);
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'format-row';
+    a.href = FORMAT_HREFS[idx] || TELEGRAM;
+    if (!FORMAT_HREFS[idx]) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    else a.setAttribute('data-scroll', '');
+
+    const inner = document.createElement('span');
+    inner.className = 'format-inner js-rev';
+    inner.innerHTML =
+      `<span class="format-index">0${n}</span>` +
+      `<span class="format-copy"><span class="format-name"></span><span class="format-desc"></span></span>` +
+      `<span class="format-arrow">${ARROW_SVG}</span>`;
+    inner.querySelector('.format-name').textContent = name;
+    inner.querySelector('.format-desc').textContent = desc;
+
+    a.appendChild(inner);
+    li.appendChild(a);
+    formatList.appendChild(li);
+
+    inview(inner, { opacity: 0, y: 26 }, { opacity: 1, y: 0 }, { tension: 190, friction: 26 }, idx * 90);
+    hover(a, inner.querySelector('.format-arrow svg'), { x: 0, opacity: 0.55 }, { x: 8, opacity: 1 }, { tension: 300, friction: 20 });
+  }
+}
+
+/* ============================================================
+   Who it's for
+   ============================================================ */
+inview(document.getElementById('fw-icon'), { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1 }, { tension: 240, friction: 20 });
+document.querySelectorAll('.fw-card').forEach((card, idx) => {
+  inview(card, { opacity: 0, y: 48 }, { opacity: 1, y: 0 }, { tension: 180, friction: 26 }, idx * 140);
+  const tile = card.querySelector('[data-hover-scale]');
+  hover(tile, tile.querySelector('img'), { scale: 1 }, { scale: 1.03 }, { tension: 300, friction: 22 });
+});
+
+/* ============================================================
+   Facts
+   ============================================================ */
+const factsGrid = document.getElementById('facts-grid');
+function rebuildFacts() {
+  factsGrid.textContent = '';
+  t('facts.items').forEach((f, idx) => {
+    const cell = document.createElement('div');
+    cell.className = 'fact js-rev';
+    const dt = document.createElement('dt');
+    dt.className = 'sr-only';
+    dt.textContent = f.l;
+    const dd = document.createElement('dd');
+    const v = document.createElement('span');
+    v.className = 'fact-value' + (f.word ? ' fact-value--word' : '');
+    v.textContent = f.v;
+    const l = document.createElement('span');
+    l.className = 'fact-label';
+    l.textContent = f.l;
+    dd.append(v, l);
+    cell.append(dt, dd);
+    factsGrid.appendChild(cell);
+    inview(cell, { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, { tension: 180, friction: 24 }, idx * 110);
+  });
+}
+
+/* ============================================================
+   Letter / dance / footer reveals
+   ============================================================ */
+inview(document.getElementById('letter-photo'), { opacity: 0, y: 40 }, { opacity: 1, y: 0 }, { tension: 180, friction: 26 });
+
+/* `autoplay` only fires once, so a loop that scrolls out of view stays paused
+   for good. Tie playback to visibility instead — it also stops the video
+   costing battery off screen, and honours reduced-motion by holding the poster. */
+document.querySelectorAll('video[autoplay]').forEach((v) => {
+  if (REDUCED) { v.removeAttribute('autoplay'); v.pause(); return; }
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { const p = v.play(); if (p) p.catch(() => {}); }
+    else v.pause();
+  }, { threshold: 0.15 }).observe(v);
+});
+inview(document.getElementById('letter-body'), { opacity: 0, y: 40 }, { opacity: 1, y: 0 }, { tension: 180, friction: 26 }, 120);
+inview(document.getElementById('dance-photo'), { opacity: 0, y: 40 }, { opacity: 1, y: 0 }, { tension: 180, friction: 26 }, 120);
+inview(document.getElementById('footer-pill'), { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, { tension: 200, friction: 24 }, 150);
+
+document.querySelectorAll('.pill').forEach((pill) => {
+  const svg = pill.querySelector('svg');
+  if (svg) hover(pill, svg, { x: 0 }, { x: 5 }, { tension: 320, friction: 20 });
+});
+
+/* ============================================================
+   Build the text-reveal registry, then fire on view
+   ============================================================ */
+Object.entries(REVEAL_OPTS).forEach(([id, opts]) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const entry = { el, key: el.dataset.i18n, opts, items: [], fired: false };
+  REVEALS.push(entry);
+  if (opts.gated) return; // hero — the loader fires these
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      io.disconnect();
+      entry.fired = true;
+      play(entry.items, opts);
+    }
+  }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+  io.observe(el);
+});
+
+/* ============================================================
+   Anchors
+   ============================================================ */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-scroll]');
+  if (!a) return;
+  const target = document.querySelector(a.getAttribute('href'));
+  if (!target) return;
+  e.preventDefault();
+  if (a.hasAttribute('data-close-menu')) closeMenu();
+  lenis.scrollTo(target, { offset: 0 });
+});
+
+/* ============================================================
+   Menu
+   ============================================================ */
+const menuEl = document.getElementById('menu');
+const menuBackdropM = new Motion(document.getElementById('menu-backdrop'), { opacity: 0 }, { tension: 260, friction: 30 });
+const menuPanelM = new Motion(document.getElementById('menu-panel'), { opacity: 0, y: -24 }, { tension: 220, friction: 28 });
+const menuLinkM = [...document.querySelectorAll('#menu-nav a')].map((a) => new Motion(a, { opacity: 0, y: 28 }, { tension: 200, friction: 26 }));
+let menuOpen = false;
+
+function openMenu() {
+  if (menuOpen) return;
+  menuOpen = true;
+  menuEl.classList.add('is-open');
+  menuEl.setAttribute('aria-hidden', 'false');
+  lockScroll();
+  menuBackdropM.to({ opacity: 1 });
+  menuPanelM.to({ opacity: 1, y: 0 });
+  menuLinkM.forEach((m, i) => {
+    m.set({ opacity: 0, y: 28 });
+    setTimeout(() => m.to({ opacity: 1, y: 0 }), 120 + i * 70);
+  });
+  syncSticky();
+}
+function closeMenu() {
+  if (!menuOpen) return;
+  menuOpen = false;
+  menuEl.setAttribute('aria-hidden', 'true');
+  menuBackdropM.to({ opacity: 0 });
+  menuPanelM.to({ opacity: 0, y: -24 });
+  menuLinkM.forEach((m) => m.to({ opacity: 0, y: 28 }));
+  unlockScroll();
+  syncSticky();
+  setTimeout(() => { if (!menuOpen) menuEl.classList.remove('is-open'); }, 450);
+}
+/* sticky CTA: on screen from the start, stepping aside only for the footer's
+   own call to action and for the open menu */
+const stickyCta = document.getElementById('sticky-cta');
+let footerCtaIn = false;
+function syncSticky() {
+  stickyCta.classList.toggle('is-visible', !footerCtaIn && !menuOpen);
+}
+new IntersectionObserver(([e]) => { footerCtaIn = e.isIntersecting; syncSticky(); }, { threshold: 0 })
+  .observe(document.querySelector('.footer-cta'));
+syncSticky();
+
+document.querySelectorAll('[data-open-menu]').forEach((b) => b.addEventListener('click', openMenu));
+document.getElementById('menu-close').addEventListener('click', closeMenu);
+document.getElementById('menu-backdrop').addEventListener('click', closeMenu);
+document.querySelectorAll('.icon-close').forEach((btn) => {
+  hover(btn, btn.querySelector('svg'), { rotate: 0 }, { rotate: 90 }, { tension: 300, friction: 18 });
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menuOpen) closeMenu(); });
+
+/* ============================================================
+   Hero gated reveals + loader
+   ============================================================ */
+const nextclassM = new Motion(document.getElementById('nextclass'), { opacity: 0, y: 28 }, { tension: 200, friction: 26 });
+
+let heroReady = false;
+function setReady() {
+  if (heroReady) return;
+  heroReady = true;
+  REVEALS.filter((r) => r.opts.gated).forEach((r) => { r.fired = true; play(r.items, r.opts); });
+  setTimeout(() => nextclassM.to({ opacity: 1, y: 0 }), 650);
+}
+
+/* first paint: fill in every string, keep reveals hidden */
+applyI18n({ instant: false });
+
+const loaderEl = document.getElementById('loader');
+const loaderFill = document.getElementById('loader-fill');
+const loaderMarkM = new Motion(document.getElementById('loader-mark'), { opacity: 0, y: 16 }, { tension: 200, friction: 22 });
+
+lockScroll();
+loaderMarkM.to({ opacity: 1, y: 0 });
+
+const MIN_VISIBLE = REDUCED ? 200 : LOADER.MIN_VISIBLE_MS;
+const FILL_MS = Math.max(0, MIN_VISIBLE - LOADER.FILL_DELAY);
+
+requestAnimationFrame(() => {
+  loaderFill.style.transition = `transform ${FILL_MS}ms ${EASE.easeInOutCubic}`;
+  loaderFill.style.transitionDelay = `${LOADER.FILL_DELAY}ms`;
+  requestAnimationFrame(() => { loaderFill.style.transform = 'scaleX(1)'; });
+});
+
+let countdownStarted = false;
+function startCountdown() {
+  if (countdownStarted) return;
+  countdownStarted = true;
+  setTimeout(finishLoader, MIN_VISIBLE);
+}
+if (document.readyState === 'complete') startCountdown();
+else window.addEventListener('load', startCountdown, { once: true });
+setTimeout(startCountdown, LOADER.MAX_VISIBLE_MS);
+
+let loaderDone = false;
+function finishLoader() {
+  if (loaderDone) return;
+  loaderDone = true;
+  setReady();
+  unlockScroll();
+  const exit = REDUCED ? 0 : LOADER.EXIT_MS;
+  if (exit === 0) { loaderEl.remove(); return; }
+  loaderEl.style.transition = `transform ${exit}ms ${EASE.easeInOutCubic}`;
+  requestAnimationFrame(() => { loaderEl.style.transform = 'translateY(-105%)'; });
+  setTimeout(() => loaderEl.remove(), exit);
+}
+
+window.addEventListener('resize', () => { window.__setRootFontSize && window.__setRootFontSize(); });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Raw photo/video source from the shoot — ~1.3 GB, not part of the deployable site.
+# Web-ready derivatives live in site/assets/.
+Photos/
+Selected Photos/
+
+# Local Claude Code state. .claude/ itself is committed (shared project config);
+# only the personal override is ignored.
+.claude/settings.local.json
+.remember/
+
+.DS_Store
