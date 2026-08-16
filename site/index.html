@@ -181,39 +181,93 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .lang span{opacity:0.35}
 
 /* ============================================================
-   Header (over the hero photo)
+   Header (above the hero, on the linen page)
+   The bar rides along on scroll and only puts on a plate once the page
+   has moved, so at rest it reads as part of the page, not as chrome.
    ============================================================ */
 .site-header{
-  display:flex;align-items:center;
-  padding:1.5rem 1.5rem 0;
+  position:sticky;top:0;z-index:50;
+  padding:0.5rem 0 0.75rem;
   font-size:0.875rem;color:var(--ink);
-  position:relative;z-index:5;
 }
-@media (min-width:640px){ .site-header{padding:2rem 2.5rem 0} }
+.hdr-bar{
+  position:relative;isolation:isolate;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  /* the inline padding lines the wordmark up with the banner's own text inset */
+  padding:0.625rem 1.5rem;
+  border-radius:var(--radius-pill);
+  transition:background-color 320ms ease,box-shadow 320ms ease;
+}
+@media (min-width:640px){ .hdr-bar{padding:0.75rem 2.5rem} }
+.hdr-bar > *{position:relative;z-index:2}
 
-.hdr-nav{flex:1;display:none;gap:2rem;align-items:center}
-@media (min-width:1024px){ .hdr-nav{display:flex} }
-.hdr-nav a{opacity:0.75;transition:opacity 200ms ease}
-.hdr-nav a:hover{opacity:1}
+/* Liquid glass, built in three layers the way a real lens reads:
+   ::before refracts and blurs what is behind, ::after paints the specular
+   rim and the sheen sliding across the top, and the bar itself carries the
+   faint tint and the shadow it casts on the page. */
+.hdr-bar::before,
+.hdr-bar::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;opacity:0;
+  transition:opacity 340ms ease;
+}
+/* Safari and Firefox stop at filter functions, so they get plain frosting */
+.hdr-bar::before{
+  z-index:0;
+  -webkit-backdrop-filter:blur(18px) saturate(180%) brightness(1.06);
+  backdrop-filter:blur(18px) saturate(180%) brightness(1.06);
+}
+/* where SVG filters are allowed through the backdrop, the blur gives way to a
+   displacement map: the photo bends across the pill instead of just softening */
+@supports (backdrop-filter:url("#hdr-glass")) or (-webkit-backdrop-filter:url("#hdr-glass")){
+  .hdr-bar::before{
+    -webkit-backdrop-filter:url("#hdr-glass") blur(4px) saturate(180%) brightness(1.14);
+    backdrop-filter:url("#hdr-glass") blur(4px) saturate(180%) brightness(1.14);
+  }
+}
+.hdr-bar::after{
+  z-index:1;
+  background:linear-gradient(
+    160deg,
+    rgba(255,255,255,0.5) 0%,
+    rgba(255,255,255,0.12) 24%,
+    rgba(255,255,255,0) 46%,
+    rgba(255,255,255,0.08) 78%,
+    rgba(255,255,255,0.28) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.45),
+    inset 0 1.5px 1px rgba(255,255,255,0.95),
+    inset 0 -1.5px 1px rgba(255,255,255,0.55),
+    inset 0 0 1.5rem rgba(255,255,255,0.3);
+}
+/* the tint has to stay heavy enough that the ink wordmark keeps its contrast
+   when the pill crosses one of the dark bands */
+.site-header.is-stuck .hdr-bar{
+  background:rgba(252,249,244,0.52);
+  box-shadow:
+    0 0.5rem 1.75rem rgba(42,37,33,0.14),
+    0 0.0625rem 0.25rem rgba(42,37,33,0.06);
+}
+.site-header.is-stuck .hdr-bar::before,
+.site-header.is-stuck .hdr-bar::after{opacity:1}
 
 .hdr-brand{
-  flex:1;display:flex;align-items:center;gap:0.5rem;white-space:nowrap;
+  display:flex;align-items:center;gap:0.5rem;white-space:nowrap;
   font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.14em;
 }
-@media (min-width:640px){ .hdr-brand{font-size:1.125rem;letter-spacing:0.2em} }
+@media (min-width:640px){ .hdr-brand{letter-spacing:0.2em} }
 /* on phones the wordmark, the language toggle and the burger have to share
-   one narrow row, so nothing is forced to an equal third */
+   one narrow row */
 @media (max-width:640px){
-  .site-header{justify-content:space-between}
-  .hdr-brand{flex:0 1 auto;letter-spacing:0.1em}
-  .hdr-right{flex:0 0 auto;gap:0.625rem}
+  .hdr-bar{gap:0.5rem}
+  .hdr-brand{min-width:0;font-size:0.9375rem;letter-spacing:0.06em;overflow:hidden;text-overflow:ellipsis}
+  .hdr-right{gap:0.625rem}
   .site-header .lang{font-size:0.8125rem}
   .site-header .lang button{padding:0.25rem 0.375rem}
 }
-@media (min-width:1024px){ .hdr-brand{justify-content:center} }
 .brand-mark{width:1.25rem;height:1.25rem;flex:none}
 
-.hdr-right{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:1rem}
+.hdr-right{flex:none;display:flex;align-items:center;gap:1rem}
 @media (min-width:640px){ .hdr-right{gap:1.25rem} }
 
 .burger{
@@ -230,40 +284,25 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 /* ============================================================
    Hero
    ============================================================ */
+/* the banner gives up the height the header now takes above it */
 .hero{
   position:relative;isolation:isolate;overflow:hidden;
   border-radius:var(--radius-card-lg);
   background:var(--surface);color:var(--ink);
-  height:calc(100svh - 1rem);
-  min-height:36rem;
+  height:calc(100svh - 1rem - var(--hdr-h,0px));
+  min-height:32rem;
   display:flex;flex-direction:column;
 }
-@media (min-width:640px){ .hero{height:calc(100svh - 1.5rem)} }
+@media (min-width:640px){ .hero{height:calc(100svh - 1.5rem - var(--hdr-h,0px))} }
 
 .hero-plate{position:absolute;inset:0;z-index:-10}
 .hero-plate-inner{position:absolute;left:0;right:0;top:-16%;height:132%;width:100%;will-change:transform}
 .hero-plate-inner picture{display:block;width:100%;height:100%}
 .hero-plate-inner img{width:100%;height:100%;object-fit:cover;object-position:50% 84%}
 @media (max-width:640px){ .hero-plate-inner img{object-position:50% 50%} }
-/* Two scrims instead of one wash: the photo stays clear through the middle,
-   where the figure is, and is only knocked back behind the type. */
-.hero-plate-grad{
-  position:absolute;inset:0;
-  background:
-    linear-gradient(to bottom,
-      rgba(246,241,232,0.94) 0%,
-      rgba(246,241,232,0.72) 10%,
-      rgba(246,241,232,0.28) 22%,
-      rgba(246,241,232,0) 32%),
-    linear-gradient(to top,
-      rgba(246,241,232,0.94) 0%,
-      rgba(246,241,232,0.70) 12%,
-      rgba(246,241,232,0.24) 24%,
-      rgba(246,241,232,0) 36%);
-}
 
-.hero-title-wrap{padding:1rem 1.5rem 0}
-@media (min-width:640px){ .hero-title-wrap{padding:1rem 2.5rem 0} }
+.hero-title-wrap{padding:1.75rem 1.5rem 0}
+@media (min-width:640px){ .hero-title-wrap{padding:2rem 2.5rem 0} }
 #hero-title{
   font-size:12.5vw;font-weight:500;text-transform:uppercase;
   line-height:0.85;letter-spacing:-0.02em;white-space:nowrap;
@@ -279,18 +318,43 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 
 .hero-tagline{
+  position:relative;isolation:isolate;
   font-size:1.9rem;font-weight:500;text-transform:uppercase;
   line-height:0.95;letter-spacing:-0.02em;color:var(--ink-deep);
 }
 @media (min-width:640px){ .hero-tagline{font-size:2.4rem} }
+/* the line sits low on the frame, where the floorboards go dark. A light
+   pool, blurred until it has no edge at all, lifts it back off the photo. */
+.hero-tagline::before{
+  content:"";position:absolute;z-index:-1;
+  inset:-1.5rem -2.75rem -1.25rem -2.25rem;
+  border-radius:50%;
+  background:rgba(246,241,232,0.82);
+  filter:blur(2.25rem);
+  pointer-events:none;
+}
 /* on phones the tagline rides under the title so the middle of the frame,
    where the figure is, stays free of type (see placeTagline in the script) */
 .hero-title-wrap .hero-tagline{margin-top:0.875rem}
-/* the floating CTA is on screen from the start; on phones it sits dead centre,
-   so the hero's bottom card needs to clear it */
-@media (max-width:640px){ .hero-bottom{padding-bottom:5.75rem} }
-
 .hero-cluster{display:flex;align-items:flex-end;gap:1rem}
+
+/* On phones the time card straddles the bottom edge of the banner: a quarter of
+   it sits on the photo, the rest on the linen below. The banner gives up that
+   overhang plus room for the floating CTA, so the whole card still lands above
+   the fold. --cluster-h is measured in the script. */
+@media (max-width:640px){
+  .hero{
+    overflow:visible;
+    /* the section below is positioned too, so the banner has to be raised for
+       the overhanging part of the card to stay on top of it */
+    z-index:2;
+    height:calc(100svh - 1rem - var(--hdr-h,0px) - 5rem - var(--cluster-h,12rem) * 0.75);
+    min-height:22rem;
+  }
+  .hero-plate{border-radius:var(--radius-card-lg);overflow:hidden}
+  .hero-bottom{padding-bottom:0}
+  .hero-cluster{margin-bottom:calc(var(--cluster-h,12rem) * -0.75)}
+}
 
 .nextclass{
   width:100%;max-width:24rem;
@@ -302,17 +366,22 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   display:flex;gap:1.125rem;align-items:stretch;
 }
 @media (min-width:640px){ .nextclass{max-width:23rem} }
-.nextclass-left{display:flex;flex-direction:column;justify-content:space-between;gap:0.75rem;flex:1;min-width:0}
+.nextclass-left{display:flex;flex-direction:column;gap:0.125rem;flex:1;min-width:0}
 .nextclass-time{display:flex;align-items:flex-start;gap:0.625rem}
 .nextclass-value{font-size:3.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em}
+/* the source time belongs to the number above it, not to the caption below */
 .nextclass-cet{font-size:1.125rem;color:var(--brand);font-weight:500;letter-spacing:0.08em}
-/* weekday over "online", two lines */
-.nextclass-caption{font-size:1.0625rem;color:var(--ink-soft);display:flex;flex-direction:column;line-height:1.35}
+/* weekday over "online", two lines, pinned to the bottom of the card */
+.nextclass-caption{
+  font-size:1.0625rem;color:var(--ink-soft);display:flex;flex-direction:column;
+  line-height:1.35;margin-top:auto;padding-top:0.75rem;
+}
 
-/* time-zone hint */
+/* time-zone hint — tucked in beside the top of the numerals */
 .info{
   position:relative;display:grid;place-items:center;flex:none;
   width:2.5rem;height:2.5rem;align-self:flex-start;
+  margin:-0.4rem 0 0 -0.375rem;
   border-radius:var(--radius-pill);color:var(--ink-soft);
   transition:color 200ms ease;
 }
@@ -354,6 +423,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   padding:2.5rem 1.5rem 3rem;
 }
 @media (min-width:640px){ .about{padding:3rem 2.5rem} }
+/* clears the part of the time card that hangs off the banner above */
+@media (max-width:640px){ .about{padding-top:calc(3.5rem + var(--cluster-h,12rem) * 0.75)} }
 
 /* "Про мене" card, now the left column of the Formats band */
 .about-card{
@@ -382,13 +453,20 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 @media (min-width:640px){
   .about-photo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:13.5rem;margin:0}
 }
-.about-photo-motion{will-change:transform,opacity}
 .about-photo-fig{
   position:relative;transform:rotate(6deg);
   aspect-ratio:3/4;border-radius:var(--radius-card);
   background:var(--surface);overflow:hidden;
   box-shadow:0 1.5rem 3rem rgba(42,37,33,0.2);
 }
+/* the frame doubles as the mask: the photo rises into it exactly the way a
+   display line rises into its own clip (see .clip in the reveal primitives) */
+.about-photo-inner{
+  width:100%;height:100%;
+  transform:translateY(115%);opacity:0;
+  will-change:transform,opacity;
+}
+.about-photo-fig.is-in .about-photo-inner{transform:translateY(0);opacity:1}
 .about-photo-fig img{width:100%;height:100%;object-fit:cover}
 .photo-cap{
   position:absolute;left:0.75rem;right:0.75rem;bottom:0.75rem;
@@ -481,6 +559,21 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .fw-cap b{display:block;font-size:1.125rem;font-weight:500}
 .fw-cap span{display:block;font-size:0.875rem;opacity:0.9;margin-top:0.125rem}
 
+/* on phones the tiles are too narrow to carry a label on top of the photo,
+   so the caption steps out from under the glass and sits below the image */
+@media (max-width:640px){
+  .fw-cards{align-items:flex-start}
+  .fw-card--2{margin-bottom:0;margin-top:2rem}
+  .fw-tile{aspect-ratio:auto;overflow:visible;border-radius:0;background:none}
+  .fw-tile img{aspect-ratio:3/4;border-radius:var(--radius-card);background:var(--surface)}
+  .fw-cap{
+    position:static;padding:0.75rem 0 0;border-radius:0;
+    background:none;color:var(--ink);
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+  }
+  .fw-cap span{color:var(--ink-soft);opacity:1}
+}
+
 /* ============================================================
    Facts band (dark)
    ============================================================ */
@@ -571,13 +664,25 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   content:"";position:absolute;left:0;top:0.72em;
   width:0.5rem;height:0.5rem;border-radius:var(--radius-pill);background:var(--brand);
 }
-.letter-lead{
-  font-size:1.5rem;line-height:1.5;font-weight:500;letter-spacing:-0.01em;
+/* the opening line is set as a pull quote, the marks sitting behind the words
+   as oversized terracotta watermarks. Scoped through .letter-body so it
+   outweighs the `.letter-body p` body copy rule above. */
+.letter-body .letter-lead{
+  position:relative;isolation:isolate;
+  font-size:1.75rem;line-height:1.35;font-weight:500;letter-spacing:-0.02em;
+  color:var(--ink-deep);
+  padding:1.25rem 0.75rem 0.5rem 1.25rem;
 }
-.letter-sign{
-  margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--hairline);
-  font-size:1.125rem;color:var(--ink-soft);
+@media (min-width:640px){ .letter-body .letter-lead{font-size:2.125rem} }
+.letter-body .letter-lead::before,
+.letter-body .letter-lead::after{
+  position:absolute;z-index:-1;pointer-events:none;user-select:none;
+  font-size:7em;line-height:1;font-weight:500;
+  color:var(--brand);opacity:0.16;
 }
+.letter-body .letter-lead::before{content:"“";top:-0.16em;left:-0.06em}
+.letter-body .letter-lead::after{content:"”";bottom:-0.68em;right:-0.05em}
+.letter-body .letter-lead + p{margin-top:1.75rem}
 
 /* ============================================================
    Dance block
@@ -611,6 +716,10 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   padding:3.5rem 1.5rem;
 }
 @media (min-width:640px){ .footer{padding:4rem 2.5rem} }
+/* on phones the floating CTA comes back once the footer's own call to action
+   has scrolled past, so the dark block grows a landing strip for it under the
+   Covent AI logo */
+@media (max-width:640px){ .footer{padding-bottom:8rem} }
 
 .footer-cta{border-bottom:1px solid rgba(246,241,232,0.15);padding-bottom:3.5rem;display:flex;flex-direction:column;gap:1.5rem}
 @media (min-width:640px){ .footer-cta{flex-direction:row;justify-content:space-between;align-items:flex-end} }
@@ -718,34 +827,31 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 .loader-mark svg{width:1.75rem;height:1.75rem;flex:none}
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
+
+/* the displacement map the header's glass reads from — never painted itself */
+.glass-defs{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
 .loader-fill{display:block;width:100%;height:100%;background:var(--brand);transform:scaleX(0);transform-origin:left}
 </style>
 </head>
 
 <body>
 
+<!-- Liquid-glass refraction map for the sticky header. A large-scale, softened
+     fractal noise drives the displacement, so the photo behind the pill bends
+     the way it would through poured glass rather than simply blurring. -->
+<svg class="glass-defs" aria-hidden="true" focusable="false">
+  <filter id="hdr-glass" x="-20%" y="-40%" width="140%" height="180%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.003 0.011" numOctaves="1" seed="17" result="noise" />
+    <feGaussianBlur in="noise" stdDeviation="6" result="soft" />
+    <feDisplacementMap in="SourceGraphic" in2="soft" scale="26" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
 <main>
 
-  <!-- ===================== HERO ===================== -->
-  <section class="hero">
-    <div class="hero-plate" aria-hidden="true">
-      <div class="hero-plate-inner" id="hero-plate-inner">
-        <picture>
-          <!-- the wide plate is a near-square frame; a portrait crop reads far better on phones -->
-          <source media="(max-width: 640px)" srcset="assets/hero-mobile.jpg" />
-          <img src="assets/hero.jpg" data-i18n-alt="hero.alt" alt="" loading="eager" fetchpriority="high" decoding="async" />
-        </picture>
-      </div>
-      <div class="hero-plate-grad"></div>
-    </div>
-
-    <header class="site-header">
-      <nav class="hdr-nav" data-i18n-aria="a11y.primaryNav" aria-label="Navigation">
-        <a href="#about" data-scroll data-i18n="nav.about"></a>
-        <a href="#formats" data-scroll data-i18n="nav.formats"></a>
-        <a href="#forwhom" data-scroll data-i18n="nav.forwhom"></a>
-      </nav>
-
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header" id="site-header">
+    <div class="hdr-bar">
       <div class="hdr-brand">
         <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
           <circle cx="12" cy="12" r="9"/>
@@ -764,7 +870,27 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
           <i></i><i></i>
         </button>
       </div>
-    </header>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-plate" aria-hidden="true">
+      <div class="hero-plate-inner" id="hero-plate-inner">
+        <picture>
+          <!-- the wide plate is a near-square frame; a portrait crop reads far better on phones -->
+          <source
+            media="(max-width: 640px)"
+            srcset="assets/hero-mobile.jpg 928w, assets/hero-mobile@2x.jpg 1856w"
+            sizes="100vw" />
+          <img
+            src="assets/hero.jpg"
+            srcset="assets/hero.jpg 2134w, assets/hero@2x.jpg 3417w"
+            sizes="100vw"
+            data-i18n-alt="hero.alt" alt="" loading="eager" fetchpriority="high" decoding="async" />
+        </picture>
+      </div>
+    </div>
 
     <div class="hero-title-wrap">
       <h1 id="hero-title" data-i18n="hero.title" data-reveal="words"></h1>
@@ -812,15 +938,15 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
     </h2>
 
     <div class="about-photo">
-      <div class="about-photo-motion js-rev" id="about-photo-motion">
-        <figure class="about-photo-fig">
+      <figure class="about-photo-fig" id="about-photo-fig">
+        <div class="about-photo-inner" id="about-photo-inner">
           <img id="about-img" src="" alt="" loading="lazy" decoding="async" />
           <figcaption class="photo-cap">
             <b id="about-cap-title"></b>
             <span id="about-cap-sub"></span>
           </figcaption>
-        </figure>
-      </div>
+        </div>
+      </figure>
     </div>
     </div>
 
@@ -861,7 +987,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   <section class="forwhom" id="forwhom" aria-labelledby="forwhom-title">
     <div class="fw-grid">
       <div class="fw-intro">
-        <img class="fw-icon js-rev" id="fw-icon" src="assets/books-1.jpg" data-i18n-alt="forwhom.iconAlt" alt="" loading="lazy" decoding="async" />
+        <img class="fw-icon js-rev" id="fw-icon" src="assets/books-1-face.jpg" data-i18n-alt="forwhom.iconAlt" alt="" width="512" height="512" loading="lazy" decoding="async" />
         <h2 id="forwhom-title" data-i18n="forwhom.title" data-reveal="lines"></h2>
         <p class="fw-body" id="fw-body" data-i18n="forwhom.body" data-reveal="wordfade"></p>
       </div>
@@ -948,7 +1074,6 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
           <li data-i18n="letter.li2"></li>
         </ul>
         <p data-i18n="letter.p3"></p>
-        <p class="letter-sign" data-i18n="letter.sign"></p>
       </div>
     </div>
   </section>
@@ -1018,6 +1143,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
         <h3 data-i18n="footer.colContact"></h3>
         <ul>
           <li><a data-tg data-i18n="footer.tgBook"></a></li>
+          <li><a data-social="instagram">Instagram</a></li>
+          <li><a data-social="youtube">YouTube</a></li>
           <li><a href="https://www.in.yoga/olena-pihulya/" target="_blank" rel="noopener noreferrer" data-i18n="footer.inyoga"></a></li>
         </ul>
       </nav>
@@ -1139,7 +1266,7 @@ const T = {
     brand: 'Олена Піхуля',
     cta: { book: 'Записатися' },
     nav: { about: 'Про мене', formats: 'Формати', forwhom: 'Кому підійде', letter: 'Лист до тебе', dance: 'Танець' },
-    a11y: { primaryNav: 'Основна навігація', lang: 'Мова', openMenu: 'Відкрити меню', closeMenu: 'Закрити меню', menu: 'Меню', slides: 'Слайди', prev: 'Попередній слайд', next: 'Наступний слайд' },
+    a11y: { lang: 'Мова', openMenu: 'Відкрити меню', closeMenu: 'Закрити меню', menu: 'Меню', slides: 'Слайди', prev: 'Попередній слайд', next: 'Наступний слайд' },
 
     hero: {
       title: 'Точка опори',
@@ -1207,7 +1334,6 @@ const T = {
       li1: 'Перша: ми не в казці. Тож просто випити солодкий засіб із гламурної пляшечки — не варіант.',
       li2: 'Друга: інші способи є. Вони складніші — потребують більше часу, уваги й терпіння. Але саме вони поступово відкривають нові двері й дають можливість по-іншому відчути та зрозуміти себе.',
       p3: 'І якщо ця перспектива викликає в тобі легкий драйв і щиру цікавість — запрошую до нового навчального сезону.',
-      sign: 'Олена',
     },
 
     dance: {
@@ -1235,7 +1361,7 @@ const T = {
     brand: 'Olena Pikhulia',
     cta: { book: 'Book a class' },
     nav: { about: 'About', formats: 'Formats', forwhom: 'Who it’s for', letter: 'A letter to you', dance: 'Dance' },
-    a11y: { primaryNav: 'Primary navigation', lang: 'Language', openMenu: 'Open menu', closeMenu: 'Close menu', menu: 'Menu', slides: 'Slides', prev: 'Previous slide', next: 'Next slide' },
+    a11y: { lang: 'Language', openMenu: 'Open menu', closeMenu: 'Close menu', menu: 'Menu', slides: 'Slides', prev: 'Previous slide', next: 'Next slide' },
 
     hero: {
       title: 'Steady ground',
@@ -1303,7 +1429,6 @@ const T = {
       li1: 'First: we are not in a fairy tale. So drinking a sweet potion from a glamorous little bottle is not an option.',
       li2: 'Second: there are other ways. They are harder — they ask for more time, attention and patience. But they are precisely the ones that open new doors and let you feel and understand yourself differently.',
       p3: 'And if that prospect stirs a little drive and honest curiosity in you — I invite you to the new season.',
-      sign: 'Olena',
     },
 
     dance: {
@@ -1724,6 +1849,14 @@ const aboutCapSub = document.getElementById('about-cap-sub');
 const aboutDots = document.getElementById('about-dots');
 let aboutIndex = 0;
 
+/* the photo rides the same reveal primitive as the display type: the frame is
+   the clip, the inner block is the line that rises into it */
+const aboutPhotoItems = [{
+  clip: document.getElementById('about-photo-fig'),
+  inner: document.getElementById('about-photo-inner'),
+}];
+const ABOUT_PHOTO_PLAY = { stagger: 0, duration: 950, easing: EASE.easeOutExpo, delay: 120 };
+
 function paintAbout(i, animateGhost) {
   const photos = t('about.photos');
   const ghost = t('about.ghost');
@@ -1732,7 +1865,10 @@ function paintAbout(i, animateGhost) {
   aboutCapTitle.textContent = p.title;
   aboutCapSub.textContent = p.sub;
   gwItems.forEach((it, n) => { it.inner.textContent = ghost[i][n]; });
-  if (animateGhost) play(gwItems, { stagger: GHOST_STAGGER, duration: 700, easing: EASE.easeOutExpo });
+  if (animateGhost) {
+    play(gwItems, { stagger: GHOST_STAGGER, duration: 700, easing: EASE.easeOutExpo });
+    play(aboutPhotoItems, ABOUT_PHOTO_PLAY);
+  }
 
   if (aboutDots.children.length !== photos.length) {
     aboutDots.textContent = '';
@@ -1750,21 +1886,17 @@ function paintAbout(i, animateGhost) {
   });
 }
 
-const aboutPhotoMotion = new Motion(aboutImg, { opacity: 1 }, { tension: 260, friction: 26 });
-let aboutSwapping = false;
+/* every slide is in the cache before the first click, so the frame is never
+   empty while the new photo rises into it */
+[...new Set(['uk', 'en'].flatMap((l) => T[l].about.photos.map((p) => p.img)))]
+  .forEach((src) => { const im = new Image(); im.src = src; });
+
 function goAbout(i) {
   const photos = t('about.photos');
   const next = (i + photos.length) % photos.length;
-  if (next === aboutIndex || aboutSwapping) return;
-  aboutSwapping = true;
-  aboutPhotoMotion.to({ opacity: 0 });
-  setTimeout(() => {
-    aboutIndex = next;
-    paintAbout(next, true);
-    aboutPhotoMotion.set({ opacity: 0 });
-    aboutPhotoMotion.to({ opacity: 1 });
-    aboutSwapping = false;
-  }, 180);
+  if (next === aboutIndex) return;
+  aboutIndex = next;
+  paintAbout(next, true);
 }
 document.getElementById('about-prev').addEventListener('click', () => goAbout(aboutIndex - 1));
 document.getElementById('about-next').addEventListener('click', () => goAbout(aboutIndex + 1));
@@ -1774,7 +1906,6 @@ document.querySelectorAll('.abtn').forEach((btn) => {
 });
 
 inview(document.getElementById('badge-card'), { opacity: 0, y: 24 }, { opacity: 1, y: 0 }, { tension: 200, friction: 26 }, 120);
-inview(document.getElementById('about-photo-motion'), { opacity: 0, y: 60, scale: 0.92 }, { opacity: 1, y: 0, scale: 1 }, { tension: 170, friction: 26 });
 
 {
   const io = new IntersectionObserver((entries) => {
@@ -1782,6 +1913,7 @@ inview(document.getElementById('about-photo-motion'), { opacity: 0, y: 60, scale
       if (!e.isIntersecting) continue;
       io.disconnect();
       play(gwItems, { stagger: GHOST_STAGGER, duration: 700, easing: EASE.easeOutExpo });
+      play(aboutPhotoItems, ABOUT_PHOTO_PLAY);
     }
   }, { threshold: 0.1 });
   io.observe(document.getElementById('about-title'));
@@ -1962,6 +2094,34 @@ function syncSticky() {
 new IntersectionObserver(([e]) => { footerCtaIn = e.isIntersecting; syncSticky(); }, { threshold: 0 })
   .observe(document.querySelector('.footer-cta'));
 syncSticky();
+
+/* ============================================================
+   Header + layout metrics
+   ============================================================ */
+/* the header rides along with the page; the plate behind it only appears once
+   the linen it sits on has started to move */
+const headerEl = document.getElementById('site-header');
+let headerStuck = false;
+function syncHeader() {
+  const stuck = window.scrollY > 4;
+  if (stuck === headerStuck) return;
+  headerStuck = stuck;
+  headerEl.classList.toggle('is-stuck', stuck);
+}
+window.addEventListener('scroll', syncHeader, { passive: true });
+syncHeader();
+
+/* the banner sizes itself against the header above it and — on phones — the
+   half of the time card that hangs below its bottom edge */
+const nextclassEl = document.getElementById('nextclass');
+function syncMetrics() {
+  const root = document.documentElement.style;
+  root.setProperty('--hdr-h', `${headerEl.offsetHeight}px`);
+  root.setProperty('--cluster-h', `${nextclassEl.offsetHeight}px`);
+}
+syncMetrics();
+window.addEventListener('resize', syncMetrics);
+document.fonts.ready.then(syncMetrics);
 
 document.querySelectorAll('[data-open-menu]').forEach((b) => b.addEventListener('click', openMenu));
 document.getElementById('menu-close').addEventListener('click', closeMenu);
