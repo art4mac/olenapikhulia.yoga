@@ -34,7 +34,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Onest:wght@400;500&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Manrope:wght@400;500;600&display=swap" />
 
 <script type="importmap">
 { "imports": { "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm" } }
@@ -81,6 +81,12 @@
   --radius-xl:0.75rem;
 
   --page-inset:0.5rem;
+
+  /* Two voices: a high-contrast display serif for the headlines and the
+     wordmark, a quiet geometric sans for everything that has to be read or
+     tapped. Both carry the full Ukrainian set (Ґ Є І Ї). */
+  --font-display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --font-text:"Manrope","Montserrat",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
 /* ============================================================
@@ -94,7 +100,7 @@ body{
   min-height:100vh;
   background:var(--background);
   color:var(--foreground);
-  font-family:"Onest",system-ui,sans-serif;
+  font-family:var(--font-text);
   font-weight:400;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
@@ -111,6 +117,20 @@ address{font-style:normal}
   overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
 html.is-locked{position:relative;overflow:hidden;height:100%}
+
+/* ============================================================
+   Display voice
+   Everything set large — the banner line, the section heads, the ghost rows,
+   the wordmark, the essay opener — runs in the serif. Anything read at body
+   size, tapped, or set as a small tracked label stays in the sans, where a
+   Didone would only cost legibility.
+   ============================================================ */
+#hero-title,.hero-tagline,#about-title,.about-card h3,
+#formats-title,.format-name,#forwhom-title,#facts-title,.fact-line,
+.socials-title,#letter-title,.letter-body .letter-lead,#dance-title,
+.footer-cta p,.menu-nav a,.hdr-brand,.footer-brand-row,.menu-brand,.loader-mark{
+  font-family:var(--font-display);
+}
 
 /* ============================================================
    Adaptive rem grid
@@ -132,6 +152,11 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .line.is-in > span{transform:translateY(0);opacity:1}
 
 .clip{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:0.12em}
+/* Й and Ґ carry marks above the cap line, and the reveal mask cuts at the box
+   edge — the display lines that hold them get that room back without moving
+   anything on the page */
+#hero-title .clip,
+#letter-title .line{padding-top:0.3em;margin-top:-0.3em}
 .clip > span{display:inline-block;transform:translateY(115%);opacity:0;will-change:transform,opacity}
 .clip.is-in > span{transform:translateY(0);opacity:1}
 
@@ -218,7 +243,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 .hdr-bar{
   position:relative;isolation:isolate;
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  /* three zones: the УФЙ credential, the wordmark dead centre, the controls.
+     The side columns share one 1fr each, so the middle stays optically centred. */
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;
   /* the inline padding lines the wordmark up with the banner's own text inset */
   padding:0.625rem 1.5rem;
   border-radius:var(--radius-pill);
@@ -278,23 +305,46 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .site-header.is-stuck .hdr-bar::after{opacity:1}
 
 .hdr-brand{
+  justify-self:center;
   display:flex;align-items:center;gap:0.5rem;white-space:nowrap;
-  font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.14em;
+  font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0;
 }
-@media (min-width:640px){ .hdr-brand{letter-spacing:0.2em} }
+@media (min-width:640px){ .hdr-brand{font-size:1.625rem} }
+
+/* УФЙ credential. The mark is a flat silhouette, so it is painted from the
+   header's own ink through a mask — that way it keeps its contrast on the linen
+   and on the glass plate alike, instead of sitting there as a grey sticker. */
+.hdr-ufy{justify-self:start;display:flex;align-items:center;gap:0.5rem;min-width:0}
+.ufy-mark{
+  width:1.75rem;height:1.75rem;flex:none;
+  background-color:currentColor;
+  -webkit-mask:url(assets/ufy-mark.png) center/contain no-repeat;
+          mask:url(assets/ufy-mark.png) center/contain no-repeat;
+}
+/* the credential is spelled out in full in both languages, so it runs three
+   lines inside the bar — still shorter than the burger, which sets the height */
+.hdr-role{
+  font-size:0.625rem;font-weight:500;line-height:1.25;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);
+  max-width:9.5rem;
+}
+
 /* on phones the wordmark, the language toggle and the burger have to share
    one narrow row */
 @media (max-width:640px){
   .hdr-bar{gap:0.5rem}
   /* sized off the English wordmark, which is the longer of the two */
-  .hdr-brand{min-width:0;font-size:0.875rem;letter-spacing:0.04em;overflow:hidden;text-overflow:ellipsis}
+  .hdr-brand{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  /* no room for the credential line next to the mark — the mark carries it */
+  .hdr-role{display:none}
+  .ufy-mark{width:1.5rem;height:1.5rem}
   .hdr-right{gap:0.625rem}
   .site-header .lang{font-size:0.8125rem}
   .site-header .lang button{padding:0.25rem 0.375rem}
 }
 .brand-mark{width:1.25rem;height:1.25rem;flex:none}
 
-.hdr-right{flex:none;display:flex;align-items:center;gap:1rem}
+.hdr-right{justify-self:end;flex:none;display:flex;align-items:center;gap:1rem}
 @media (min-width:640px){ .hdr-right{gap:1.25rem} }
 
 .burger{
@@ -334,6 +384,16 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   font-size:12.5vw;font-weight:500;text-transform:uppercase;
   line-height:0.85;letter-spacing:-0.02em;white-space:nowrap;
   color:var(--ink-deep);text-align:center;
+}
+/* "Йоґа. Точка опори" is half again as wide as the old single phrase; held on
+   one row a phone would have to shrink it to a third of its size, so there it
+   breaks after the first word instead and keeps the display scale. */
+@media (max-width:640px){
+  #hero-title{
+    white-space:normal;
+    display:flex;flex-wrap:wrap;justify-content:center;column-gap:0.26em;
+  }
+  #hero-title .clip:first-child{flex-basis:100%}
 }
 
 .hero-bottom{
@@ -401,23 +461,25 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .nextclass-time{display:flex;align-items:flex-start;gap:0.625rem}
 .nextclass-value{font-size:3.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em}
 /* the source time belongs to the number above it, not to the caption below */
-.nextclass-cet{font-size:1.125rem;color:var(--brand);font-weight:500;letter-spacing:0.08em}
+.nextclass-source{display:flex;align-items:center;gap:0.125rem}
+/* the source time is one unit — with the hint beside it on a phone it would
+   otherwise break after "18:30" */
+.nextclass-cet{font-size:1.125rem;color:var(--brand);font-weight:500;letter-spacing:0.08em;white-space:nowrap;flex:none}
 /* weekday over "online", two lines, pinned to the bottom of the card */
 .nextclass-caption{
   font-size:1.0625rem;color:var(--ink-soft);display:flex;flex-direction:column;
   line-height:1.35;margin-top:auto;padding-top:0.75rem;
 }
 
-/* time-zone hint — tucked in beside the top of the numerals */
+/* time-zone hint — sits on the source-time line, tap target kept at 2rem */
 .info{
   position:relative;display:grid;place-items:center;flex:none;
-  width:2.5rem;height:2.5rem;align-self:flex-start;
-  margin:-0.4rem 0 0 -0.375rem;
+  width:2rem;height:2rem;
   border-radius:var(--radius-pill);color:var(--ink-soft);
   transition:color 200ms ease;
 }
 .info:hover{color:var(--ink-deep)}
-.info svg{width:2.5rem;height:2.5rem}
+.info svg{width:1.25rem;height:1.25rem}
 .info-tip{
   position:absolute;bottom:calc(100% + 0.5rem);left:50%;
   transform:translate(-50%,0.25rem);
@@ -472,17 +534,34 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 #about-title{
   position:relative;z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none;
   max-width:88rem;margin:0 auto;
-  font-size:8.2vw;font-weight:500;text-transform:uppercase;
+  /* the ghost rows now carry a quote broken into phrases, not single words, so
+     the row runs wider than it used to and the display size gives way to it */
+  font-size:7.3vw;font-weight:500;text-transform:uppercase;
   line-height:1.02;letter-spacing:-0.02em;
 }
 .ghost-row{display:flex;justify-content:space-between;align-items:baseline}
 .gw{display:inline-block;color:var(--ghost);will-change:transform}
 .gw--ink{color:var(--ink)}
 
+/* Per-slide typesetting. The three parts of the quote are different lengths and
+   the photo floats in the middle of the rows, so each slide gets the size and
+   the frame position that keep the words clear of it — paintAbout() stamps the
+   slide index on both the headline and the stage. */
+#about-title[data-slide="0"] .ghost-row:nth-child(2),
+#about-title[data-slide="2"] .ghost-row:nth-child(2){font-size:0.74em}
+/* on the last slide the accent belongs to "всесвіт", the word that closes the
+   quote, not to "всередині" */
+#about-title[data-slide="2"] .gw[data-gw="2"]{color:var(--ghost)}
+#about-title[data-slide="2"] .gw[data-gw="3"]{color:var(--ink)}
+
 .about-stage{position:relative}
 .about-photo{position:relative;z-index:10;width:12rem;margin:2rem auto 0}
 @media (min-width:640px){
   .about-photo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:13.5rem;margin:0}
+  /* slide 2 puts one long word on the ink row, slide 3 leaves a gap between the
+     two words of the top row — the frame moves into the free space */
+  .about-stage[data-slide="1"] .about-photo{left:72%}
+  .about-stage[data-slide="2"] .about-photo{left:57%}
 }
 .about-photo-fig{
   position:relative;transform:rotate(6deg);
@@ -606,9 +685,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 
 /* ============================================================
-   Facts band (dark)
+   "Для тебе" band (dark)
    ============================================================ */
-/* two separate dark cards sharing one row: numbers 9 columns, links 3 */
+/* two separate dark cards sharing one row: the promises 9 columns, links 3 */
 .dark-row{display:grid;grid-template-columns:minmax(0,1fr);gap:0.75rem;margin-top:0.75rem}
 @media (min-width:1024px){
   .dark-row{grid-template-columns:repeat(12,minmax(0,1fr))}
@@ -622,15 +701,13 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 @media (min-width:640px){ .facts{padding:4rem 2.5rem} }
 #facts-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
-.facts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2rem;row-gap:2.5rem;margin-top:3rem}
-@media (min-width:1280px){ .facts-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
-.fact-value--word{overflow-wrap:anywhere}
+/* four promises, set large — they carry the band on their own now that the
+   counters (19 / 9) live in the "Про мене" card instead */
+.facts-grid{display:grid;grid-template-columns:minmax(0,1fr);column-gap:3rem;row-gap:2rem;margin-top:3rem}
+@media (min-width:768px){ .facts-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .fact{border-top:1px solid rgba(246,241,232,0.2);padding-top:1.25rem;will-change:transform,opacity}
-.fact-value{display:block;font-size:3.75rem;font-weight:500;letter-spacing:-0.02em;line-height:1}
-@media (min-width:640px){ .fact-value{font-size:4.5rem} }
-.fact-value--word{font-size:2.25rem}
-@media (min-width:640px){ .fact-value--word{font-size:2.75rem} }
-.fact-label{display:block;font-size:1.125rem;color:rgba(246,241,232,0.65);margin-top:0.75rem}
+.fact-line{display:block;font-size:1.75rem;font-weight:500;letter-spacing:-0.02em;line-height:1.14}
+@media (min-width:640px){ .fact-line{font-size:2.125rem} }
 
 /* the social links keep their own dark card beside the numbers */
 .socials-band{
@@ -659,7 +736,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .socials-list svg{width:1.125rem;height:1.125rem;flex:none}
 
 /* ============================================================
-   Letter (her own words)
+   Yoga essay (her own words, beside the asana video)
    ============================================================ */
 .letter{background:var(--background);padding:5rem 1.5rem}
 @media (min-width:640px){ .letter{padding:6rem 2.5rem} }
@@ -674,16 +751,20 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   border-radius:var(--radius-card);overflow:hidden;aspect-ratio:3/4;
   background:var(--surface);will-change:transform,opacity;min-width:0;
 }
-/* photo 4 columns, heading 3, text 5 — declared after the base rule above so
-   `aspect-ratio:auto` wins; with 3/4 still applied the figure would size itself
-   from the row height and spill over the heading */
+/* One empty column on each side pulls the block off the page edges and towards
+   the middle: photo 4 columns starting at the second, the essay 6 after it.
+   Declared after the base rule above so `aspect-ratio:auto` wins — with 3/4
+   still applied the figure would size itself from the row height and spill over
+   the text. */
 @media (min-width:1024px){
-  .letter-photo{grid-column:span 4;aspect-ratio:auto;height:100%}
-  .letter-head{grid-column:span 3}
-  .letter-body{grid-column:span 5}
+  .letter-photo{grid-column:2 / span 4;aspect-ratio:auto;height:100%}
+  .letter-main{grid-column:span 6}
 }
 .letter-photo img,.letter-photo video{width:100%;height:100%;object-fit:cover;display:block}
-.letter-body{max-width:38rem;will-change:transform,opacity}
+/* one column, set at reading size. The measure lives on the paragraphs, not on
+   the block, so the opening line can use the full width of the cell above them. */
+.letter-body{will-change:transform,opacity;margin-top:1.75rem}
+.letter-body p,.letter-body ul{max-width:42rem}
 .letter-body p{font-size:1.1875rem;line-height:1.75;color:var(--ink)}
 .letter-body p + p{margin-top:1.25rem}
 .letter-body ul + p{margin-top:1.25rem}
@@ -695,25 +776,20 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   content:"";position:absolute;left:0;top:0.72em;
   width:0.5rem;height:0.5rem;border-radius:var(--radius-pill);background:var(--brand);
 }
-/* the opening line is set as a pull quote, the marks sitting behind the words
-   as oversized terracotta watermarks. Scoped through .letter-body so it
-   outweighs the `.letter-body p` body copy rule above. */
+/* The opening question is the display line of the block: two lines held by a
+   measure, with the question mark set two lines tall at the end of the phrase.
+   Scoped through .letter-body so it outweighs the `.letter-body p` rule above. */
 .letter-body .letter-lead{
-  position:relative;isolation:isolate;
-  font-size:1.75rem;line-height:1.35;font-weight:500;letter-spacing:-0.02em;
+  font-size:1.75rem;line-height:1.25;font-weight:500;letter-spacing:-0.02em;
   color:var(--ink-deep);
-  padding:1.25rem 0.75rem 0.5rem 1.25rem;
+  /* the cell is what breaks it into two lines; balance evens them out */
+  max-width:none;text-wrap:balance;
+  margin-bottom:2.25rem;
 }
-@media (min-width:640px){ .letter-body .letter-lead{font-size:2.125rem} }
-.letter-body .letter-lead::before,
-.letter-body .letter-lead::after{
-  position:absolute;z-index:-1;pointer-events:none;user-select:none;
-  font-size:7em;line-height:1;font-weight:500;
-  color:var(--brand);opacity:0.16;
-}
-.letter-body .letter-lead::before{content:"“";top:-0.16em;left:-0.06em}
-.letter-body .letter-lead::after{content:"”";bottom:-0.68em;right:-0.05em}
-.letter-body .letter-lead + p{margin-top:1.75rem}
+/* sized so the Ukrainian line — the longer of the two — still sets in two lines
+   inside the narrower column */
+@media (min-width:640px){ .letter-body .letter-lead{font-size:1.875rem} }
+.letter-body .letter-lead + p{margin-top:0}
 
 /* ============================================================
    Dance block
@@ -733,10 +809,6 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   background:var(--background);will-change:transform,opacity;
 }
 .dance-photo img{width:100%;height:100%;object-fit:cover}
-.dance-note{
-  margin-top:1.5rem;font-size:0.875rem;color:var(--ink-soft);
-  border-left:2px solid var(--brand);padding-left:0.75rem;line-height:1.6;
-}
 
 /* ============================================================
    Footer
@@ -760,7 +832,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .footer-cols{padding:3.5rem 0;display:grid;grid-template-columns:1fr;gap:2.5rem}
 @media (min-width:768px){ .footer-cols{grid-template-columns:1.4fr 1fr 1fr 1fr} }
 .footer-brand{max-width:20rem}
-.footer-brand-row{display:flex;align-items:center;gap:0.5rem;font-size:1.1875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em}
+.footer-brand-row{display:flex;align-items:center;gap:0.5rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
 .footer-blurb{font-size:1.125rem;color:rgba(246,241,232,0.65);margin-top:1rem;line-height:1.6}
 .footer-col h3{font-size:0.875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em;color:rgba(246,241,232,0.5)}
 .footer-col ul{margin-top:1rem;font-size:1.125rem;color:rgba(246,241,232,0.8);display:flex;flex-direction:column;gap:0.75rem}
@@ -774,7 +846,6 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 @media (min-width:640px){ .footer-bottom{flex-direction:row;justify-content:space-between;align-items:center} }
 .footer-bottom nav{display:flex;gap:1.25rem;flex-wrap:wrap}
 .footer-bottom a:hover{color:var(--on-ink)}
-.footer-credit a{text-decoration:underline;text-underline-offset:0.15em}
 
 .covent{display:inline-flex;align-items:center;gap:0.75rem}
 .covent-by{font-size:0.875rem;color:rgba(246,241,232,0.45)}
@@ -794,7 +865,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .menu-inner{flex:1;display:flex;flex-direction:column;padding:1.5rem}
 @media (min-width:640px){ .menu-inner{padding:2rem 2.5rem 2.5rem} }
 .menu-top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.menu-brand{display:flex;align-items:center;gap:0.5rem;font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em}
+.menu-brand{display:flex;align-items:center;gap:0.5rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
 .icon-close{
   width:2.5rem;height:2.5rem;flex:none;display:grid;place-items:center;
   border-radius:var(--radius-pill);background:rgba(246,241,232,0.15);
@@ -853,11 +924,13 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   will-change:transform;
 }
 .loader-mark{
-  display:flex;align-items:center;gap:0.75rem;
-  font-size:1.5rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em;
+  display:flex;flex-direction:column;align-items:center;gap:1.25rem;
+  font-size:1.625rem;font-weight:500;text-transform:uppercase;letter-spacing:0;
   opacity:0;will-change:transform,opacity;text-align:center;
 }
-.loader-mark svg{width:1.75rem;height:1.75rem;flex:none}
+/* the УФЙ mark stands over the name, held back to a light grey so the wordmark
+   stays the loudest thing on the screen */
+.loader-ufy{width:3.25rem;height:3.25rem;color:rgba(42,37,33,0.22)}
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
 
 /* the displacement map the header's glass reads from — never painted itself */
@@ -884,11 +957,15 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   <!-- ===================== HEADER ===================== -->
   <header class="site-header" id="site-header">
     <div class="hdr-bar">
+      <!-- the УФЙ credential holds the left slot, so the circle-and-dot mark
+           steps aside here and keeps the wordmark lockup in the menu, the
+           footer and the loader -->
+      <div class="hdr-ufy">
+        <span class="ufy-mark" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
+        <span class="hdr-role" data-i18n="brandRole"></span>
+      </div>
+
       <div class="hdr-brand">
-        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-          <circle cx="12" cy="12" r="9"/>
-          <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
-        </svg>
         <span data-i18n="brand"></span>
       </div>
 
@@ -936,6 +1013,11 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
           <div class="nextclass-left">
             <span class="nextclass-time">
               <span class="nextclass-value" id="nextclass-value">19:30</span>
+            </span>
+            <!-- the hint rides the source-time line: beside the numerals it has
+                 no room left on a phone and lands on the photo -->
+            <span class="nextclass-source">
+              <span class="nextclass-cet" data-i18n="hero.sourceTime"></span>
               <button type="button" class="info" id="tz-info" aria-describedby="tz-tip" data-i18n-aria="hero.tzLabel">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.1"/>
@@ -943,7 +1025,6 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
                 <span class="info-tip" id="tz-tip" role="tooltip"></span>
               </button>
             </span>
-            <span class="nextclass-cet" data-i18n="hero.sourceTime"></span>
             <span class="nextclass-caption">
               <span id="nextclass-day"></span>
               <span data-i18n="hero.online"></span>
@@ -1052,7 +1133,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   <div class="dark-row">
   <section class="facts" aria-labelledby="facts-title">
     <h2 id="facts-title" data-i18n="facts.title" data-reveal="lines"></h2>
-    <dl class="facts-grid" id="facts-grid"></dl>
+    <ul class="facts-grid" id="facts-grid"></ul>
   </section>
 
   <!-- ===================== SOCIAL BAND ===================== -->
@@ -1084,28 +1165,31 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   </section>
   </div>
 
-  <!-- ===================== LETTER ===================== -->
+  <!-- ===================== YOGA (essay + asana video) ===================== -->
   <section class="letter" id="letter" aria-labelledby="letter-title">
     <div class="letter-grid">
       <figure class="letter-photo js-rev" id="letter-photo">
-        <video src="assets/letter.mp4" poster="assets/letter-poster.jpg"
+        <video src="assets/asana.mp4" poster="assets/asana-poster.jpg"
                autoplay muted loop playsinline preload="metadata"
                data-i18n-aria="letter.photoAlt"></video>
       </figure>
 
-      <div class="letter-head">
-        <h2 id="letter-title" data-i18n="letter.title" data-reveal="lines"></h2>
-      </div>
+      <div class="letter-main">
+        <div class="letter-head">
+          <h2 id="letter-title" data-i18n="letter.title" data-reveal="lines"></h2>
+        </div>
 
-      <div class="letter-body js-rev" id="letter-body">
-        <p class="letter-lead" data-i18n="letter.lead"></p>
-        <p data-i18n="letter.p1"></p>
-        <p data-i18n="letter.p2"></p>
-        <ul>
-          <li data-i18n="letter.li1"></li>
-          <li data-i18n="letter.li2"></li>
-        </ul>
-        <p data-i18n="letter.p3"></p>
+        <div class="letter-body js-rev" id="letter-body">
+          <p class="letter-lead" data-i18n="letter.lead"></p>
+          <p data-i18n="letter.p1"></p>
+          <p data-i18n="letter.p2"></p>
+          <ul>
+            <li data-i18n="letter.li1"></li>
+            <li data-i18n="letter.li2"></li>
+          </ul>
+          <p data-i18n="letter.p3"></p>
+          <p data-i18n="letter.p4"></p>
+        </div>
       </div>
     </div>
   </section>
@@ -1117,7 +1201,6 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
         <span class="eyebrow eyebrow--dark" data-i18n="dance.eyebrow"></span>
         <h2 id="dance-title" data-i18n="dance.title" data-reveal="lines"></h2>
         <p class="dance-body" data-i18n="dance.body"></p>
-        <p class="dance-note" data-i18n="dance.note"></p>
       </div>
       <figure class="dance-photo js-rev" id="dance-photo">
         <img src="assets/lifestyle.jpg" data-i18n-alt="dance.photoAlt" alt="" loading="lazy" decoding="async" />
@@ -1184,10 +1267,6 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
     <div class="footer-bottom">
       <span data-i18n="footer.copy"></span>
-      <span class="footer-credit">
-        <span data-i18n="footer.creditPre"></span>
-        <a href="https://viktoriia-ilieva-photographer.com/" target="_blank" rel="noopener noreferrer" data-i18n="footer.photographer"></a>
-      </span>
       <a class="covent" data-covent>
         <span class="covent-by" data-i18n="footer.madeBy"></span>
         <img class="covent-logo" src="assets/covent-ai.svg" alt="Covent AI" width="350" height="95" loading="lazy" decoding="async" />
@@ -1256,10 +1335,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 <!-- ===================== LOADER ===================== -->
 <div class="loader" id="loader">
   <div class="loader-mark" id="loader-mark">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-      <circle cx="12" cy="12" r="9"/>
-      <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
-    </svg>
+    <span class="ufy-mark loader-ufy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
     <span data-i18n="brand"></span>
   </div>
   <div class="loader-track">
@@ -1279,12 +1355,11 @@ import Lenis from 'lenis';
    ============================================================ */
 const TELEGRAM = 'https://t.me/CHANGE_ME_BOT';
 
-/* Social profiles. in.yoga is known; the other two are placeholders until the
-   real handles are supplied. */
+/* Social profiles */
 const SOCIAL = {
   inyoga:    'https://www.in.yoga/olena-pihulya/',
-  instagram: 'https://www.instagram.com/CHANGE_ME',
-  youtube:   'https://www.youtube.com/@CHANGE_ME',
+  instagram: 'https://www.instagram.com/elena.pikhulya.yoga',
+  youtube:   'https://www.youtube.com/@arslonga906',
 };
 
 /* Site credit */
@@ -1296,13 +1371,14 @@ const COVENT_URL = 'https://coventpro.ai/?utm_source=olenapikhulia.yoga&utm_medi
 const T = {
   uk: {
     brand: 'Олена Піхуля',
+    brandRole: 'інструктор Української федерації йоги',
     cta: { book: 'Записатися' },
-    nav: { about: 'Про мене', formats: 'Формати', forwhom: 'Кому підійде', letter: 'Лист до тебе', dance: 'Танець' },
-    a11y: { lang: 'Мова', openMenu: 'Відкрити меню', closeMenu: 'Закрити меню', menu: 'Меню', slides: 'Слайди', prev: 'Попередній слайд', next: 'Наступний слайд' },
+    nav: { about: 'Про мене', formats: 'Формати', forwhom: 'Кому підійде', letter: 'Йоґа', dance: 'Танець' },
+    a11y: { lang: 'Мова', openMenu: 'Відкрити меню', closeMenu: 'Закрити меню', menu: 'Меню', slides: 'Слайди', prev: 'Попередній слайд', next: 'Наступний слайд', ufy: 'Логотип Української федерації йоги' },
 
     hero: {
-      title: 'Точка опори',
-      tagline: 'Навіть коли весь|світ перевертається',
+      title: 'Йоґа. Точка опори',
+      tagline: 'Навіть коли|світ перевертається',
       alt: 'Олена Піхуля виконує асану в студії',
       online: 'онлайн',
       sourceTime: '18:30 CET',
@@ -1314,89 +1390,90 @@ const T = {
 
     about: {
       cardTitle: 'Про мене',
-      cardBody: 'Практикую 19 років, викладаю 9. Психологиня за освітою, лінгвістка й перекладачка — працюю із санскритом і перекладаю йогічні першоджерела. Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям.',
+      cardBody: 'Практикую 19 років, 9 років викладаю за програмою Української федерації йоги. Сертифікований інструктор European Union of Yoga. Психологіня, лінгвіст, перекладач книг та статей з йоґи. Вивчаю тему розвитку людини через танцювальне мистецтво та культурно-естетичний простір в цілому. Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям.',
       photos: [
-        { img: 'assets/studio-1.jpg', title: 'Свідома практика', sub: 'Тіло як точка входу', alt: 'Асана з поворотом хребта' },
-        { img: 'assets/sunset-2.jpg', title: 'Жива практика', sub: 'Асана і рівновага', alt: 'Асана з бічним нахилом у студії' },
-        { img: 'assets/books-2.jpg', title: 'Першоджерела', sub: 'Санскрит і тексти', alt: 'Олена з книжками та килимком для йоги' },
+        { img: 'assets/studio-1.jpg', title: 'Тілесна чуттєвість', sub: 'тіло як інструмент розвитку', alt: 'Асана з поворотом хребта' },
+        { img: 'assets/portrait-1.jpg', title: 'Контроль емоцій', sub: 'принципи гармонійної взаємодії у спілкуванні', alt: 'Портрет Олени Піхулі' },
+        { img: 'assets/desk-1.jpg', title: 'Свідома практика', sub: 'з опорою на першоджерела і сучасні дослідження', alt: 'Олена за столом із розкритою книжкою та ноутбуком' },
       ],
+      /* one quote broken across the three slides; empty slots keep the two-word
+         middle part on two rows the way the four-word parts sit */
       ghost: [
-        ['Бачити', 'Красу', 'Світу', 'Щодня'],
-        ['Рухатись', 'Зростати', 'Яскраво', 'Жити'],
-        ['Тіло', 'Дихання', 'Увага', 'Смисл'],
+        ['На', 'шляху', 'свідомого', 'розвитку'],
+        ['немає', '', 'стоп-слова', ''],
+        ['особливо', 'якщо', 'всередині', 'всесвіт'],
       ],
     },
 
     formats: {
       eyebrow: 'Формати занять',
       title: 'Обери свій|формат',
-      r1Name: 'Групова практика онлайн', r1Desc: 'Щосереди о 19:30 (18:30 CET). Заняття проходять онлайн.',
-      r2Name: 'Індивідуальне заняття', r2Desc: 'Персональна програма під твій запит, тіло і графік. Онлайн.',
+      r1Name: 'Групове навчання онлайн', r1Desc: 'Щосереди о 19:30 (18:30 CET). Заняття проходять онлайн.',
+      r2Name: 'Індивідуальні заняття', r2Desc: 'Персональна програма під твій запит.',
       r3Name: 'Практика наживо', r3Desc: 'Швеція та Данія — за домовленістю.',
-      r4Name: 'Танець і Natya-yoga', r4Desc: 'Йога для танцівників: робота з формою, ритмом і виразністю.',
+      r4Name: 'Танець і Natya-yoga', r4Desc: 'Tribal Fusion та йога для танцівників.',
     },
 
     forwhom: {
       title: 'Для тих,|хто готовий|рухатися',
-      body: 'Для тих, хто готовий рухатися, зростати і переходити на яскраву сторону сили. Не потрібні ні гнучкість, ні попередній досвід — потрібні увага і трохи регулярності.',
+      body: 'Буду рада спілкуватися з тими, хто готовий до трансформацій шляхом послідовних практик. З рішучими у відмові від емоційних та поведінкових шаблонів, та уважними у рефлексії своїх глибинних бажань і почуттів.',
       iconAlt: 'Книжки й килимок для йоги',
-      card1Title: 'Початківцям', card1Desc: 'Почнемо з тіла й дихання, без вимог до розтяжки.',
+      card1Title: 'Для початківців', card1Desc: 'Почнемо з вибудовування тіла й дихання.',
       card1Alt: 'Сидяча поза на килимку в студії',
-      card2Title: 'Тим, хто вже практикує', card2Desc: 'Поглиблення: асана, пранаяма, робота з увагою.',
+      card2Title: 'Готовим рухатися вперед', card2Desc: 'Робота з увагою, емоціями та світоглядом.',
       card2Alt: 'Асана в студії',
     },
 
     facts: {
-      title: 'Досвід,|який відчутно',
+      title: 'Для тебе',
       items: [
-        { v: '19', l: 'років особистої практики', word: false },
-        { v: '9', l: 'років викладання йоги', word: false },
-        { v: 'Санскрит', l: 'перекладаю йогічні першоджерела', word: true },
-        { v: 'Онлайн', l: 'практика з будь-якої точки світу', word: true },
+        'Мій досвід та увага',
+        'Онлайн-практика з будь-якої точки світу',
+        'Розширення кута зору на себе і світ',
+        'Яскравий простір для розвитку',
       ],
       socialLabel: 'Де мене|знайти',
     },
 
     letter: {
-      title: 'Аліса|і таємна зала',
-      photoAlt: 'Практика на набережній на заході сонця',
-      lead: 'Відчуваєш себе, як Аліса в таємній залі, де було багато дверей і столик із ключиком?..',
-      p1: 'Із чогось маленького й тісного вже давно виріс, а до чогось більшого й складнішого намагаєшся дотягнутися, але не знаєш, як?',
-      p2: 'Маю для тебе дві новини:',
-      li1: 'Перша: ми не в казці. Тож просто випити солодкий засіб із гламурної пляшечки — не варіант.',
-      li2: 'Друга: інші способи є. Вони складніші — потребують більше часу, уваги й терпіння. Але саме вони поступово відкривають нові двері й дають можливість по-іншому відчути та зрозуміти себе.',
-      p3: 'І якщо ця перспектива викликає в тобі легкий драйв і щиру цікавість — запрошую до нового навчального сезону.',
+      title: 'Йоґа',
+      photoAlt: 'Олена Піхуля виконує асану',
+      lead: 'Іноді мене запитують, чи дає йоґа сенс життя. Або, можливо, допомагає його знайти?..',
+      p1: 'Складно давати коректні відповіді на не дуже коректні запитання. Адже йоґа нікому нічого не винна. А ми — не шукачі скарбів і не герої роману, де «самі запропонують і самі все дадуть».',
+      p2: 'Тож я б сказала так:',
+      li1: 'Того, хто справді прагне, йоґа надихає вчитися.',
+      li2: 'Тому, хто дійсно готовий бачити більше, йоґа пропонує складніший погляд — на себе, на світ, на життя.',
+      p3: 'Обмірковуючи ці спостереження, людина може почати помічати глибинні сенси в тому, що відбувається довкола. А згодом — навчитися самостійно творити сенси для себе. Іноді — підсвічувати їх іншим.',
+      p4: 'Говоримо про це на заняттях. Тож запрошую до нової групи!',
     },
 
     dance: {
       eyebrow: 'І ще',
       title: 'Танець',
-      body: 'Танцівниця й викладачка Всеукраїнської федерації танцю, віцепрезидентка львівської секції CID UNESCO, співавторка Natya-yoga — йоги для танцівників. Організовую міжнародні танцювальні конгреси та фестивалі.',
-      note: 'Чернетка: складено з відкритої біографії. Замінимо на твій текст, коли надішлеш.',
+      body: 'Танцівниця й викладачка Всеукраїнської федерації танцю, віцепрезидентка львівської секції CID UNESCO, співавторка напрямку Natya-yoga — йоги для танцівників. Онлайн-заняття в стилі Tribal Fusion Belly dance.',
       photoAlt: 'Олена з килимком для йоги',
     },
 
     footer: {
-      title: 'Готові|почати?',
+      title: 'Готовий|почати?',
       blurb: 'Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям.',
       tgBook: 'Telegram — запис на заняття',
       inyoga: 'Профіль на in.yoga',
       colFormats: 'Формати', colAbout: 'Про практику', colContact: 'Контакти',
       copy: '© 2026 Олена Піхуля',
-      creditPre: 'Фото:',
-      photographer: 'Вікторія Ілієва',
       madeBy: 'Зроблено в',
     },
   },
 
   en: {
     brand: 'Olena Pikhulia',
+    brandRole: 'yoga teacher, Ukrainian Federation of Yoga',
     cta: { book: 'Book a class' },
-    nav: { about: 'About', formats: 'Formats', forwhom: 'Who it’s for', letter: 'A letter to you', dance: 'Dance' },
-    a11y: { lang: 'Language', openMenu: 'Open menu', closeMenu: 'Close menu', menu: 'Menu', slides: 'Slides', prev: 'Previous slide', next: 'Next slide' },
+    nav: { about: 'About', formats: 'Formats', forwhom: 'Who it’s for', letter: 'Yoga', dance: 'Dance' },
+    a11y: { lang: 'Language', openMenu: 'Open menu', closeMenu: 'Close menu', menu: 'Menu', slides: 'Slides', prev: 'Previous slide', next: 'Next slide', ufy: 'Ukrainian Federation of Yoga logo' },
 
     hero: {
-      title: 'Steady ground',
+      title: 'Yoga. Steady ground',
       tagline: 'Even when the world|turns upside down',
       alt: 'Olena Pikhulia practising in the studio',
       online: 'online',
@@ -1409,65 +1486,67 @@ const T = {
 
     about: {
       cardTitle: 'About me',
-      cardBody: 'Nineteen years of practice, nine of teaching. A psychologist by training, a linguist and translator — I work with Sanskrit and translate primary yogic texts. I teach yoga as the art of seeing the beauty of the world and living a bright, conscious life.',
+      cardBody: 'Nineteen years of practice; nine years teaching in the programme of the Ukrainian Federation of Yoga. Certified teacher of the European Union of Yoga. Psychologist, linguist, translator of books and articles on yoga. I study human development through the art of dance and through the cultural and aesthetic space at large. I teach yoga as the art of seeing the beauty of the world and living a bright, conscious life.',
       photos: [
-        { img: 'assets/studio-1.jpg', title: 'Conscious practice', sub: 'The body as the way in', alt: 'A seated spinal twist' },
-        { img: 'assets/sunset-2.jpg', title: 'Living practice', sub: 'Asana and balance', alt: 'A side-angle pose in the studio' },
-        { img: 'assets/books-2.jpg', title: 'Primary sources', sub: 'Sanskrit and texts', alt: 'Olena with books and a yoga mat' },
+        { img: 'assets/studio-1.jpg', title: 'Bodily sensitivity', sub: 'the body as an instrument of growth', alt: 'A seated spinal twist' },
+        { img: 'assets/portrait-1.jpg', title: 'Emotional control', sub: 'principles of harmonious interaction with others', alt: 'A portrait of Olena Pikhulia' },
+        { img: 'assets/desk-1.jpg', title: 'Conscious practice', sub: 'grounded in primary sources and current research', alt: 'Olena at a table with an open book and a laptop' },
       ],
+      /* one quote broken across the three slides; empty slots keep the shorter
+         middle part on two rows the way the four-part slides sit */
       ghost: [
-        ['Seeing', 'Beauty', 'Every', 'Day'],
-        ['Moving', 'Growing', 'Living', 'Brightly'],
-        ['Body', 'Breath', 'Attention', 'Meaning'],
+        ['On the', 'path of', 'conscious', 'growth'],
+        ['there', 'is no', 'safe', 'word'],
+        ['especially', 'if', 'inside', 'a universe'],
       ],
     },
 
     formats: {
       eyebrow: 'Ways to practise',
       title: 'Choose your|format',
-      r1Name: 'Group practice online', r1Desc: 'Every Wednesday at 19:30 (18:30 CET), online.',
-      r2Name: 'One-to-one session', r2Desc: 'A programme built around your body, your goals and your schedule. Online.',
+      r1Name: 'Group course online', r1Desc: 'Every Wednesday at 19:30 (18:30 CET), online.',
+      r2Name: 'One-to-one sessions', r2Desc: 'A personal programme built around what you ask for.',
       r3Name: 'In person', r3Desc: 'Sweden and Denmark — by arrangement.',
-      r4Name: 'Dance and Natya yoga', r4Desc: 'Yoga for dancers: form, rhythm and expression.',
+      r4Name: 'Dance and Natya yoga', r4Desc: 'Tribal Fusion and yoga for dancers.',
     },
 
     forwhom: {
       title: 'For those|ready to|move',
-      body: 'For those ready to move, to grow and to step over to the bright side of the force. You need neither flexibility nor prior experience — only attention and a little regularity.',
+      body: 'I will be glad to work with those ready for transformation through consistent practice. With those decisive in letting go of emotional and behavioural patterns, and attentive in reflecting on their deepest wishes and feelings.',
       iconAlt: 'Books and a yoga mat',
-      card1Title: 'Beginners', card1Desc: 'We start with body and breath. No flexibility required.',
+      card1Title: 'For beginners', card1Desc: 'We start by building up the body and the breath.',
       card1Alt: 'A seated pose on the mat in the studio',
-      card2Title: 'Already practising', card2Desc: 'Going deeper: asana, pranayama, working with attention.',
+      card2Title: 'Ready to move forward', card2Desc: 'Working with attention, emotions and the way you see the world.',
       card2Alt: 'A studio asana',
     },
 
     facts: {
-      title: 'Experience|you can feel',
+      title: 'For you',
       items: [
-        { v: '19', l: 'years of personal practice', word: false },
-        { v: '9', l: 'years of teaching yoga', word: false },
-        { v: 'Sanskrit', l: 'I translate primary yogic texts', word: true },
-        { v: 'Online', l: 'practise from anywhere in the world', word: true },
+        'My experience and attention',
+        'Online practice from anywhere in the world',
+        'A wider angle on yourself and the world',
+        'A bright space to grow',
       ],
       socialLabel: 'Where to|find me',
     },
 
     letter: {
-      title: 'Alice|and the hall of doors',
-      photoAlt: 'Practice on a pier at sunset',
-      lead: 'Do you feel like Alice in that secret hall — all those doors, and a little table with a key?..',
-      p1: 'You outgrew something small and narrow a long time ago, and you keep reaching for something larger and harder, but you don’t quite know how?',
-      p2: 'I have two pieces of news for you:',
-      li1: 'First: we are not in a fairy tale. So drinking a sweet potion from a glamorous little bottle is not an option.',
-      li2: 'Second: there are other ways. They are harder — they ask for more time, attention and patience. But they are precisely the ones that open new doors and let you feel and understand yourself differently.',
-      p3: 'And if that prospect stirs a little drive and honest curiosity in you — I invite you to the new season.',
+      title: 'Yoga',
+      photoAlt: 'Olena Pikhulia in an asana',
+      lead: 'Sometimes I am asked whether yoga gives life its meaning. Or perhaps helps you find it?..',
+      p1: 'It is hard to give correct answers to questions that are not quite correct. Yoga owes nobody anything. And we are not treasure hunters, nor heroes of a novel where everything is offered and handed over.',
+      p2: 'So I would put it this way:',
+      li1: 'Those who truly want it, yoga inspires to learn.',
+      li2: 'Those genuinely ready to see more, yoga offers a harder view — of themselves, of the world, of life.',
+      p3: 'Turning these observations over, a person may begin to notice deeper meanings in what happens around them. And later — learn to create meanings of their own. Sometimes — to light them up for others.',
+      p4: 'We talk about this in class. So — welcome to the new group!',
     },
 
     dance: {
       eyebrow: 'One more thing',
       title: 'Dance',
-      body: 'Dancer and teacher with the All-Ukrainian Dance Federation, vice-president of the Lviv section of CID UNESCO, co-author of Natya yoga — yoga for dancers. I organise international dance congresses and festivals.',
-      note: 'Draft: assembled from the public biography. To be replaced with your own text.',
+      body: 'Dancer and teacher with the All-Ukrainian Dance Federation, vice-president of the Lviv section of CID UNESCO, co-author of Natya yoga — yoga for dancers. Online classes in Tribal Fusion belly dance.',
       photoAlt: 'Olena with a yoga mat',
     },
 
@@ -1478,8 +1557,6 @@ const T = {
       inyoga: 'Profile on in.yoga',
       colFormats: 'Formats', colAbout: 'Practice', colContact: 'Contact',
       copy: '© 2026 Olena Pikhulia',
-      creditPre: 'Photography:',
-      photographer: 'Viktoriia Ilieva',
       madeBy: 'Made at',
     },
   },
@@ -1815,8 +1892,28 @@ addParallax(heroSection, document.getElementById('hero-plate-inner'), 'Y', 0, 12
 function fitHeroTitle() {
   heroTitleEl.style.fontSize = '';
   const avail = heroTitleEl.clientWidth;
+  if (avail <= 0) return;
+
+  /* On phones the first word takes a row of its own (see the CSS) and the rest
+     share the row under it. Flex would break that second row apart instead of
+     scaling it, so the fit is measured against the words themselves. */
+  if (window.matchMedia('(max-width:640px)').matches) {
+    const clips = [...heroTitleEl.querySelectorAll('.clip')];
+    if (clips.length < 2) return;
+    const gap = parseFloat(getComputedStyle(heroTitleEl).columnGap) || 0;
+    const rest = clips.slice(1).reduce((s, c) => s + c.getBoundingClientRect().width, 0)
+      + gap * (clips.length - 2);
+    /* two pixels of slack: scaled to the exact width, sub-pixel rounding still
+       breaks the row apart */
+    if (rest > avail - 2) {
+      const base = parseFloat(getComputedStyle(heroTitleEl).fontSize);
+      heroTitleEl.style.fontSize = `${base * ((avail - 2) / rest)}px`;
+    }
+    return;
+  }
+
   const natural = heroTitleEl.scrollWidth;
-  if (avail > 0 && natural > avail) {
+  if (natural > avail) {
     const base = parseFloat(getComputedStyle(heroTitleEl).fontSize);
     heroTitleEl.style.fontSize = `${base * (avail / natural)}px`;
   }
@@ -1867,6 +1964,8 @@ window.addEventListener('resize', fitAllLines);
    About carousel + ghost words
    ============================================================ */
 const aboutSection = document.querySelector('.about');
+const aboutTitleEl = document.getElementById('about-title');
+const aboutStageEl = document.querySelector('.about-stage');
 const gwEls = [...document.querySelectorAll('#about-title .gw')];
 const gwParallax = [[-3, 3], [3, -3], [-2, 4], [4, -3]];
 gwEls.forEach((el, i) => addParallax(aboutSection, el, 'X', gwParallax[i][0], gwParallax[i][1], '%'));
@@ -1893,6 +1992,10 @@ function paintAbout(i, animateGhost) {
   const photos = t('about.photos');
   const ghost = t('about.ghost');
   const p = photos[i];
+  /* the per-slide type size, the accent word and the frame position are all
+     CSS, keyed off this index (see the About block in the stylesheet) */
+  aboutTitleEl.dataset.slide = String(i);
+  aboutStageEl.dataset.slide = String(i);
   aboutImg.src = p.img; aboutImg.alt = p.alt;
   aboutCapTitle.textContent = p.title;
   aboutCapSub.textContent = p.sub;
@@ -2000,26 +2103,18 @@ document.querySelectorAll('.fw-card').forEach((card, idx) => {
 });
 
 /* ============================================================
-   Facts
+   "Для тебе"
    ============================================================ */
 const factsGrid = document.getElementById('facts-grid');
 function rebuildFacts() {
   factsGrid.textContent = '';
-  t('facts.items').forEach((f, idx) => {
-    const cell = document.createElement('div');
+  t('facts.items').forEach((line, idx) => {
+    const cell = document.createElement('li');
     cell.className = 'fact js-rev';
-    const dt = document.createElement('dt');
-    dt.className = 'sr-only';
-    dt.textContent = f.l;
-    const dd = document.createElement('dd');
     const v = document.createElement('span');
-    v.className = 'fact-value' + (f.word ? ' fact-value--word' : '');
-    v.textContent = f.v;
-    const l = document.createElement('span');
-    l.className = 'fact-label';
-    l.textContent = f.l;
-    dd.append(v, l);
-    cell.append(dt, dd);
+    v.className = 'fact-line';
+    v.textContent = line;
+    cell.appendChild(v);
     factsGrid.appendChild(cell);
     inview(cell, { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, { tension: 180, friction: 24 }, idx * 110);
   });
