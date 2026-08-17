@@ -9,3 +9,9 @@ Selected Photos/
 .remember/
 
 .DS_Store
+
+# Local docker env (see .env.example for the committed template).
+.env
+
+# Playwright MCP scratch output (screenshots, page snapshots).
+.playwright-mcp/
