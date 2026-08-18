@@ -22,7 +22,7 @@
 <meta property="og:url" content="https://olenapikhulia.dev.coventpro.ai/" />
 <meta property="og:title" content="Олена Піхуля — йоґа онлайн" />
 <meta property="og:description" content="Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям. Групові заняття онлайн щосереди та індивідуальні практики." />
-<meta property="og:image" content="https://olenapikhulia.dev.coventpro.ai/assets/og.jpg?v=2" />
+<meta property="og:image" content="https://olenapikhulia.dev.coventpro.ai/assets/og.jpg?v=3" />
 <meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Олена Піхуля — йоґа онлайн" />
 <meta name="twitter:description" content="Групові заняття онлайн щосереди та індивідуальні практики." />
-<meta name="twitter:image" content="https://olenapikhulia.dev.coventpro.ai/assets/og.jpg?v=2" />
+<meta name="twitter:image" content="https://olenapikhulia.dev.coventpro.ai/assets/og.jpg?v=3" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -72,6 +72,7 @@
   --brand-light:#c98a63;     /* hover / focus ring */
   --accent-sage:#8c9a80;     /* second accent */
   --ghost:#e2d8c8;           /* oversized ghost text */
+  --uy-grey:#b2b2b2;         /* the Ukrainian Yogis logo's own grey */
   --hairline:#dfd5c6;
   --on-ink:#f6f1e8;          /* text on the dark bands */
 
@@ -311,16 +312,17 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 @media (min-width:640px){ .hdr-brand{font-size:1.625rem} }
 
-/* УФЙ credential. The mark is a flat silhouette, so it is painted from the
-   header's own ink through a mask — that way it keeps its contrast on the linen
-   and on the glass plate alike, instead of sitting there as a grey sticker. */
-.hdr-ufy{justify-self:start;display:flex;align-items:center;gap:0.5rem;min-width:0}
-.ufy-mark{
-  width:1.75rem;height:1.75rem;flex:none;
-  background-color:currentColor;
-  -webkit-mask:url(assets/ufy-mark.png) center/contain no-repeat;
-          mask:url(assets/ufy-mark.png) center/contain no-repeat;
+/* The Ukrainian Yogis lockup — pictogram over the calligraphic wordmark. Shipped
+   as an alpha-only PNG and painted through a mask, so it keeps the brand grey on
+   the linen and on the dark bands alike and needs no second colour variant. */
+.uy-mark{
+  flex:none;aspect-ratio:339/470;
+  background-color:var(--uy-grey);
+  -webkit-mask:url(assets/uy-logo.png) center/contain no-repeat;
+          mask:url(assets/uy-logo.png) center/contain no-repeat;
 }
+.hdr-ufy{justify-self:start;display:flex;align-items:center;gap:0.625rem;min-width:0}
+.hdr-uy{height:3.5rem}
 /* the credential is spelled out in full in both languages, so it runs three
    lines inside the bar — still shorter than the burger, which sets the height */
 .hdr-role{
@@ -337,12 +339,11 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   .hdr-brand{min-width:0;overflow:hidden;text-overflow:ellipsis}
   /* no room for the credential line next to the mark — the mark carries it */
   .hdr-role{display:none}
-  .ufy-mark{width:1.5rem;height:1.5rem}
+  .hdr-uy{height:2.25rem}
   /* the language switch lives in the burger menu on phones, where it has room
      to be a proper tap target */
   .site-header .lang{display:none}
 }
-.brand-mark{width:1.25rem;height:1.25rem;flex:none}
 
 .hdr-right{justify-self:end;flex:none;display:flex;align-items:center;gap:1rem}
 @media (min-width:640px){ .hdr-right{gap:1.25rem} }
@@ -726,6 +727,12 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .socials-list{display:flex;flex-wrap:wrap;gap:0.75rem}
 
 .social-logo{width:1.5rem;height:1.5rem;flex:none;border-radius:var(--radius-pill);object-fit:cover;background:var(--on-ink)}
+/* in.yoga wears the federation's lotus, in the logo's grey */
+.social-logo--lotus{
+  background:var(--uy-grey);border-radius:0;
+  -webkit-mask:url(assets/ufy-mark.png) center/contain no-repeat;
+          mask:url(assets/ufy-mark.png) center/contain no-repeat;
+}
 .socials-list a{
   display:inline-flex;align-items:center;gap:0.5rem;
   border:1px solid rgba(246,241,232,0.25);border-radius:var(--radius-pill);
@@ -805,7 +812,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 @media (min-width:640px){ #dance-title{font-size:3rem} }
 .dance-body{font-size:1.125rem;color:var(--ink-soft);line-height:1.7;margin-top:1.25rem;max-width:32rem}
 .dance-photo{
-  border-radius:var(--radius-card);overflow:hidden;aspect-ratio:4/3;
+  border-radius:var(--radius-card);overflow:hidden;aspect-ratio:1/1;
   background:var(--background);will-change:transform,opacity;
 }
 .dance-photo img{width:100%;height:100%;object-fit:cover}
@@ -832,7 +839,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .footer-cols{padding:3.5rem 0;display:grid;grid-template-columns:1fr;gap:2.5rem}
 @media (min-width:768px){ .footer-cols{grid-template-columns:1.4fr 1fr 1fr 1fr} }
 .footer-brand{max-width:20rem}
-.footer-brand-row{display:flex;align-items:center;gap:0.5rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
+.footer-brand-row{display:flex;align-items:center;gap:0.75rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
+.footer-uy{height:2.5rem}
 .footer-blurb{font-size:1.125rem;color:rgba(246,241,232,0.65);margin-top:1rem;line-height:1.6}
 .footer-col h3{font-size:0.875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em;color:rgba(246,241,232,0.5)}
 .footer-col ul{margin-top:1rem;font-size:1.125rem;color:rgba(246,241,232,0.8);display:flex;flex-direction:column;gap:0.75rem}
@@ -865,7 +873,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .menu-inner{flex:1;display:flex;flex-direction:column;padding:1.5rem}
 @media (min-width:640px){ .menu-inner{padding:2rem 2.5rem 2.5rem} }
 .menu-top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.menu-brand{display:flex;align-items:center;gap:0.5rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
+.menu-brand{display:flex;align-items:center;gap:0.75rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
+.menu-uy{height:2.25rem}
 .icon-close{
   width:2.5rem;height:2.5rem;flex:none;display:grid;place-items:center;
   border-radius:var(--radius-pill);background:rgba(246,241,232,0.15);
@@ -928,9 +937,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   font-size:1.625rem;font-weight:500;text-transform:uppercase;letter-spacing:0;
   opacity:0;will-change:transform,opacity;text-align:center;
 }
-/* the УФЙ mark stands over the name, held back to a light grey so the wordmark
-   stays the loudest thing on the screen */
-.loader-ufy{width:3.25rem;height:3.25rem;color:rgba(42,37,33,0.22)}
+/* the lockup stands over the name; the wordmark stays the loudest thing here */
+.loader-uy{height:5.25rem}
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
 
 /* the displacement map the header's glass reads from — never painted itself */
@@ -961,7 +969,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
            steps aside here and keeps the wordmark lockup in the menu, the
            footer and the loader -->
       <div class="hdr-ufy">
-        <span class="ufy-mark" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
+        <span class="uy-mark hdr-uy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
         <span class="hdr-role" data-i18n="brandRole"></span>
       </div>
 
@@ -1108,7 +1116,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
       <div class="fw-cards">
         <figure class="fw-card js-rev" data-fw="0">
           <span class="fw-tile" data-hover-scale>
-            <img src="assets/sea-1.jpg" data-i18n-alt="forwhom.card1Alt" alt="" loading="lazy" decoding="async" />
+            <img src="assets/studio-3.jpg" data-i18n-alt="forwhom.card1Alt" alt="" loading="lazy" decoding="async" />
             <figcaption class="fw-cap fw-cap--sage">
               <b data-i18n="forwhom.card1Title"></b>
               <span data-i18n="forwhom.card1Desc"></span>
@@ -1118,7 +1126,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
         <figure class="fw-card fw-card--2 js-rev" data-fw="1">
           <span class="fw-tile" data-hover-scale>
-            <img src="assets/studio-2.jpg" data-i18n-alt="forwhom.card2Alt" alt="" loading="lazy" decoding="async" />
+            <img src="assets/studio-4.jpg" data-i18n-alt="forwhom.card2Alt" alt="" loading="lazy" decoding="async" />
             <figcaption class="fw-cap fw-cap--clay">
               <b data-i18n="forwhom.card2Title"></b>
               <span data-i18n="forwhom.card2Desc"></span>
@@ -1142,7 +1150,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
       <h2 class="socials-title" id="socials-title" data-i18n="facts.socialLabel" data-reveal="lines"></h2>
       <nav class="socials-list" data-i18n-aria="facts.socialLabel" aria-label="Social">
         <a data-social="inyoga">
-          <img class="social-logo" src="assets/inyoga-logo.png" alt="" width="60" height="60" loading="lazy" decoding="async" />
+          <span class="social-logo social-logo--lotus" aria-hidden="true"></span>
           <span>in.yoga</span>
         </a>
         <a data-social="instagram">
@@ -1203,7 +1211,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
         <p class="dance-body" data-i18n="dance.body"></p>
       </div>
       <figure class="dance-photo js-rev" id="dance-photo">
-        <img src="assets/lifestyle.jpg" data-i18n-alt="dance.photoAlt" alt="" loading="lazy" decoding="async" />
+        <img src="assets/dance-1.jpg" data-i18n-alt="dance.photoAlt" alt="" loading="lazy" decoding="async" />
       </figure>
     </div>
   </section>
@@ -1225,10 +1233,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
     <div class="footer-cols">
       <div class="footer-brand">
         <div class="footer-brand-row">
-          <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
-          </svg>
+          <span class="uy-mark footer-uy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
           <span data-i18n="brand"></span>
         </div>
         <p class="footer-blurb" data-i18n="footer.blurb"></p>
@@ -1291,10 +1296,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
     <div class="menu-inner">
       <div class="menu-top">
         <div class="menu-brand">
-          <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
-          </svg>
+          <span class="uy-mark menu-uy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
           <span data-i18n="brand"></span>
         </div>
         <button type="button" class="icon-close" id="menu-close" data-i18n-aria="a11y.closeMenu" aria-label="Close">
@@ -1335,7 +1337,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 <!-- ===================== LOADER ===================== -->
 <div class="loader" id="loader">
   <div class="loader-mark" id="loader-mark">
-    <span class="ufy-mark loader-ufy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
+    <span class="uy-mark loader-uy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
     <span data-i18n="brand"></span>
   </div>
   <div class="loader-track">
@@ -1420,8 +1422,8 @@ const T = {
       iconAlt: 'Книжки й килимок для йоги',
       card1Title: 'Для початківців', card1Desc: 'Почнемо з вибудовування тіла й дихання.',
       card1Alt: 'Сидяча поза на килимку в студії',
-      card2Title: 'Готовим рухатися вперед', card2Desc: 'Робота з увагою, емоціями та світоглядом.',
-      card2Alt: 'Асана в студії',
+      card2Title: 'Для вдумливих та наполегливих', card2Desc: 'Робота з увагою, емоціями та світоглядом.',
+      card2Alt: 'Олена сидить на круглому столі в студії',
     },
 
     facts: {
@@ -1451,7 +1453,7 @@ const T = {
       eyebrow: 'І ще',
       title: 'Танець',
       body: 'Танцівниця й викладачка Всеукраїнської федерації танцю, віцепрезидентка львівської секції CID UNESCO, співавторка напрямку Natya-yoga — йоги для танцівників. Онлайн-заняття в стилі Tribal Fusion Belly dance.',
-      photoAlt: 'Олена з килимком для йоги',
+      photoAlt: 'Олена в танцювальній позі Tribal Fusion',
     },
 
     footer: {
@@ -1516,8 +1518,8 @@ const T = {
       iconAlt: 'Books and a yoga mat',
       card1Title: 'For beginners', card1Desc: 'We start by building up the body and the breath.',
       card1Alt: 'A seated pose on the mat in the studio',
-      card2Title: 'Ready to move forward', card2Desc: 'Working with attention, emotions and the way you see the world.',
-      card2Alt: 'A studio asana',
+      card2Title: 'For the thoughtful and persistent', card2Desc: 'Working with attention, emotions and the way you see the world.',
+      card2Alt: 'Olena seated on a round table in the studio',
     },
 
     facts: {
@@ -1547,7 +1549,7 @@ const T = {
       eyebrow: 'One more thing',
       title: 'Dance',
       body: 'Dancer and teacher with the All-Ukrainian Dance Federation, vice-president of the Lviv section of CID UNESCO, co-author of Natya yoga — yoga for dancers. Online classes in Tribal Fusion belly dance.',
-      photoAlt: 'Olena with a yoga mat',
+      photoAlt: 'Olena in a Tribal Fusion dance pose',
     },
 
     footer: {
