@@ -394,6 +394,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
    breaks after the first word instead and keeps the display scale. */
 @media (max-width:640px){
   #hero-title{
+    font-size:11.25vw;
     white-space:normal;
     display:flex;flex-wrap:wrap;justify-content:center;column-gap:0.26em;
   }
@@ -445,6 +446,19 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
     min-height:16rem;
   }
   .hero-plate{border-radius:var(--radius-card-lg);overflow:hidden}
+  /* both display lines sit close to the edges of the frame, so the middle of it
+     — where the figure is — stays open, and both are centred on it */
+  .hero-title-wrap{padding-top:1rem}
+  .hero-bottom{padding-bottom:1rem}
+  .hero-tagline{text-align:center}
+  /* the banner overflows on phones (the card hangs off its bottom edge), so the
+     pool has nothing to clip it: it stays inside the text box and leans on a
+     shorter blur, and it is half as bright, so the floorboards read through */
+  .hero-tagline::before{
+    inset:-0.625rem -0.5rem -0.5rem -0.5rem;
+    background:rgba(246,241,232,0.5);
+    filter:blur(1.25rem);
+  }
   .hero-cluster{
     position:absolute;top:calc(100% + 0.75rem);
     left:var(--gutter);right:var(--gutter);
@@ -966,50 +980,50 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
 /* ============================================================
    Phone typography
-   Every reading size steps down about two points on a phone, where the column
+   Every reading size steps down about four points on a phone, where the column
    is a third of the desktop width; the side gutters pull in with them (see
-   --gutter). The two frame-scaled display heads — the banner line and the ghost
-   rows — are sized off the viewport and keep the scale they set.
+   --gutter). The ghost rows behind the carousel are the one display head sized
+   off the viewport, and they keep the scale they set.
    ============================================================ */
 @media (max-width:640px){
-  .eyebrow{font-size:0.8125rem}
-  .pill,.sticky-cta{font-size:1rem}
+  .eyebrow{font-size:0.75rem}
+  .pill,.sticky-cta{font-size:0.9375rem}
 
-  .hero-tagline{font-size:1.75rem}
-  .nextclass-value{font-size:3rem}
-  .nextclass-cet{font-size:1rem}
-  .nextclass-caption{font-size:0.9375rem}
-  .nextclass-note{font-size:0.8125rem}
+  .hero-tagline{font-size:1.5rem}
+  .nextclass-value{font-size:2.625rem}
+  .nextclass-cet{font-size:0.9375rem}
+  .nextclass-caption{font-size:0.875rem}
+  .nextclass-note{font-size:0.75rem}
 
-  .badge-chip{font-size:1.125rem}
-  .about-card h3{font-size:1.625rem}
-  .about-card p{font-size:0.9375rem}
-  .photo-cap b{font-size:1rem}
-  .photo-cap span{font-size:0.8125rem}
+  .badge-chip{font-size:1rem}
+  .about-card h3{font-size:1.5rem}
+  .about-card p{font-size:0.875rem}
+  .photo-cap b{font-size:0.9375rem}
+  .photo-cap span{font-size:0.75rem}
 
-  #formats-title,#forwhom-title,#facts-title,.socials-title,#letter-title{font-size:2.625rem}
-  .format-index,.format-desc{font-size:1rem}
-  .format-name{font-size:1.375rem}
+  #formats-title,#forwhom-title,#facts-title,.socials-title,#letter-title{font-size:2.25rem}
+  .format-index,.format-desc{font-size:0.9375rem}
+  .format-name{font-size:1.25rem}
 
-  .fw-body{font-size:1rem}
-  .fw-cap b{font-size:1rem}
-  .fw-cap span{font-size:0.8125rem}
+  .fw-body{font-size:0.9375rem}
+  .fw-cap b{font-size:0.9375rem}
+  .fw-cap span{font-size:0.75rem}
 
-  .fact-line{font-size:1.625rem}
-  .socials-list a{font-size:1rem}
+  .fact-line{font-size:1.5rem}
+  .socials-list a{font-size:0.9375rem}
 
-  .letter-body p,.letter-body li{font-size:1.0625rem}
-  .letter-body .letter-lead{font-size:1.5625rem}
+  .letter-body p,.letter-body li{font-size:1rem}
+  .letter-body .letter-lead{font-size:1.4375rem}
 
-  #dance-title{font-size:2rem}
-  .dance-body{font-size:1rem}
+  #dance-title{font-size:1.75rem}
+  .dance-body{font-size:0.9375rem}
 
-  .footer-cta p{font-size:3.25rem}
-  .footer-brand-row,.menu-brand{font-size:1.25rem}
-  .footer-blurb,.footer-col ul,.footer-bottom,.menu-social{font-size:1rem}
-  .footer-col h3{font-size:0.8125rem}
-  .menu-nav a{font-size:2rem}
-  .loader-mark{font-size:1.5rem}
+  .footer-cta p{font-size:2.875rem}
+  .footer-brand-row,.menu-brand{font-size:1.125rem}
+  .footer-blurb,.footer-col ul,.footer-bottom,.menu-social{font-size:0.9375rem}
+  .footer-col h3{font-size:0.75rem}
+  .menu-nav a{font-size:1.875rem}
+  .loader-mark{font-size:1.375rem}
 }
 
 /* the displacement map the header's glass reads from — never painted itself */
