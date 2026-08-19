@@ -848,6 +848,15 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 #dance-title{font-size:2.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
 @media (min-width:640px){ #dance-title{font-size:3rem} }
 .dance-body{font-size:1.125rem;color:var(--ink-soft);line-height:1.7;margin-top:1.25rem;max-width:32rem}
+/* a phrase inside body copy that carries a link: it steps up to full ink and
+   takes a terracotta rule under it, rather than shouting in the accent colour */
+.inline-link{
+  color:var(--ink);
+  text-decoration:underline;text-decoration-color:var(--brand);
+  text-decoration-thickness:1px;text-underline-offset:0.2em;
+  transition:color 200ms ease,text-decoration-color 200ms ease;
+}
+.inline-link:hover{color:var(--brand)}
 .dance-photo{
   border-radius:var(--radius-card);overflow:hidden;aspect-ratio:1/1;
   background:var(--background);will-change:transform,opacity;
@@ -1294,7 +1303,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
       <div>
         <span class="eyebrow eyebrow--dark" data-i18n="dance.eyebrow"></span>
         <h2 id="dance-title" data-i18n="dance.title" data-reveal="lines"></h2>
-        <p class="dance-body" data-i18n="dance.body"></p>
+        <p class="dance-body" data-i18n="dance.body" data-i18n-link="https://www.ukrainiandancefederation.com/"></p>
       </div>
       <figure class="dance-photo js-rev" id="dance-photo">
         <img src="assets/dance-1.jpg" data-i18n-alt="dance.photoAlt" alt="" loading="lazy" decoding="async" />
@@ -1539,7 +1548,7 @@ const T = {
     dance: {
       eyebrow: 'І ще',
       title: 'Танець',
-      body: 'Танцівниця й викладачка Всеукраїнської федерації танцю, віцепрезидентка львівської секції CID UNESCO, співавторка напрямку Natya-yoga — йоги для танцівників. Онлайн-заняття в стилі Tribal Fusion Belly dance.',
+      body: 'Танцівниця й викладачка [Всеукраїнської федерації танцю], віцепрезидентка львівської секції CID UNESCO, співавторка напрямку Natya-yoga — йоги для танцівників. Онлайн-заняття в стилі Tribal Fusion Belly dance.',
       photoAlt: 'Олена в танцювальній позі Tribal Fusion',
     },
 
@@ -1636,7 +1645,7 @@ const T = {
     dance: {
       eyebrow: 'One more thing',
       title: 'Dance',
-      body: 'Dancer and teacher with the All-Ukrainian Dance Federation, vice-president of the Lviv section of CID UNESCO, co-author of Natya yoga — yoga for dancers. Online classes in Tribal Fusion belly dance.',
+      body: 'Dancer and teacher with the [All-Ukrainian Dance Federation], vice-president of the Lviv section of CID UNESCO, co-author of Natya yoga — yoga for dancers. Online classes in Tribal Fusion belly dance.',
       photoAlt: 'Olena in a Tribal Fusion dance pose',
     },
 
@@ -1854,6 +1863,23 @@ let lang = localStorage.getItem('lang') || 'uk';
 if (!T[lang]) lang = 'uk';
 const t = (path) => path.split('.').reduce((o, k) => (o == null ? o : o[k]), T[lang]);
 
+/* One phrase inside a paragraph carries a link. The copy marks it with square
+   brackets — [Всеукраїнської федерації танцю] — so either language can put it
+   where its own grammar wants it without touching the markup, and the anchor is
+   built as a node rather than as a string of HTML. */
+function setLinkedCopy(el, value, href) {
+  const parts = value.match(/^([^[]*)\[([^\]]+)\]([\s\S]*)$/);
+  el.textContent = '';
+  if (!parts) { el.textContent = value; return; }
+  const a = document.createElement('a');
+  a.className = 'inline-link';
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.textContent = parts[2];
+  el.append(parts[1], a, parts[3]);
+}
+
 function applyI18n({ instant }) {
   document.documentElement.lang = lang;
   document.title = lang === 'uk' ? 'Олена Піхуля — йоґа онлайн' : 'Olena Pikhulia — yoga online';
@@ -1861,7 +1887,8 @@ function applyI18n({ instant }) {
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const v = t(el.dataset.i18n);
     if (typeof v !== 'string') return;
-    if (el.dataset.reveal) return; // handled by the reveal registry
+    if (el.dataset.reveal) return;        // handled by the reveal registry
+    if (el.dataset.i18nLink) { setLinkedCopy(el, v, el.dataset.i18nLink); return; }
     el.textContent = v;
   });
   document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
