@@ -433,17 +433,23 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
 /* On phones the photograph carries nothing but the title: the tagline and the
    time card both step out of the banner and stack under its bottom edge, on the
-   linen. The banner gives up the height of that stack plus room for the floating
-   CTA, so all of it still lands above the fold. --below-h is measured in the
-   script. */
+   linen (--below-h is measured in the script, and the section below clears it).
+   The frame no longer sizes itself against them — it holds the crop's own
+   proportion, so the figure stands in it whole at every screen height, and the
+   stack starts where it starts. */
 @media (max-width:640px){
   .hero{
     overflow:visible;
     /* the section below is positioned too, so the banner has to be raised for
        the stack hanging off its bottom edge to stay on top of it */
     z-index:2;
-    height:calc(100svh - 1rem - var(--hdr-h,0px) - 0.75rem - var(--below-h,16rem) - 5rem);
-    min-height:12rem;
+    /* hero-mobile.jpg is 928x1551 and the plate behind it runs at 132% for the
+       parallax: 0.598 x 1.32 is the one proportion where the photograph fills
+       the frame's width with nothing cut off either side, and the window sits on
+       the middle 76% of its height — the figure, with air above and below */
+    height:auto;
+    aspect-ratio:0.789;
+    min-height:0;
   }
   .hero-plate{border-radius:var(--radius-card-lg);overflow:hidden}
   /* the title sits close to the top edge, so the middle of the frame — where the
