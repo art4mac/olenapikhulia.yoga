@@ -431,38 +431,32 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 .hero-cluster{display:flex;align-items:flex-end;gap:1rem}
 
-/* On phones the time card steps out of the banner altogether: the tagline holds
-   the foot of the photo and the card hangs just under the bottom edge, on the
-   linen. The banner gives up the card's height plus room for the floating CTA,
-   so the whole card still lands above the fold. --cluster-h is measured in the
+/* On phones the photograph carries nothing but the title: the tagline and the
+   time card both step out of the banner and stack under its bottom edge, on the
+   linen. The banner gives up the height of that stack plus room for the floating
+   CTA, so all of it still lands above the fold. --below-h is measured in the
    script. */
 @media (max-width:640px){
   .hero{
     overflow:visible;
     /* the section below is positioned too, so the banner has to be raised for
-       the card hanging off its bottom edge to stay on top of it */
+       the stack hanging off its bottom edge to stay on top of it */
     z-index:2;
-    height:calc(100svh - 1rem - var(--hdr-h,0px) - 0.75rem - var(--cluster-h,12rem) - 4.5rem);
-    min-height:16rem;
+    height:calc(100svh - 1rem - var(--hdr-h,0px) - 0.75rem - var(--below-h,16rem) - 5rem);
+    min-height:12rem;
   }
   .hero-plate{border-radius:var(--radius-card-lg);overflow:hidden}
-  /* both display lines sit close to the edges of the frame, so the middle of it
-     — where the figure is — stays open, and both are centred on it */
+  /* the title sits close to the top edge, so the middle of the frame — where the
+     figure is — stays open */
   .hero-title-wrap{padding-top:1rem}
-  .hero-bottom{padding-bottom:1rem}
+  .hero-bottom{
+    position:absolute;top:calc(100% + 0.75rem);left:0;right:0;
+    padding:0 var(--gutter);gap:0.875rem;
+  }
+  /* centred under the centred title, and off the photograph it needs no light
+     pool to lift it off the floorboards */
   .hero-tagline{text-align:center}
-  /* the banner overflows on phones (the card hangs off its bottom edge), so the
-     pool has nothing to clip it: it stays inside the text box and leans on a
-     shorter blur, and it is half as bright, so the floorboards read through */
-  .hero-tagline::before{
-    inset:-0.625rem -0.5rem -0.5rem -0.5rem;
-    background:rgba(246,241,232,0.5);
-    filter:blur(1.25rem);
-  }
-  .hero-cluster{
-    position:absolute;top:calc(100% + 0.75rem);
-    left:var(--gutter);right:var(--gutter);
-  }
+  .hero-tagline::before{display:none}
 }
 
 .nextclass{
@@ -555,7 +549,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 @media (min-width:640px){ .about{padding:3rem var(--gutter)} }
 /* clears the time card, which hangs off the banner above and lands here */
-@media (max-width:640px){ .about{padding-top:calc(3.25rem + var(--cluster-h,12rem))} }
+@media (max-width:640px){ .about{padding-top:calc(3.25rem + var(--below-h,16rem))} }
 
 /* "Про мене" card, now the left column of the Formats band */
 .about-card{
@@ -884,9 +878,20 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
 .footer-cols{padding:3.5rem 0;display:grid;grid-template-columns:1fr;gap:2.5rem}
 @media (min-width:768px){ .footer-cols{grid-template-columns:1.4fr 1fr 1fr 1fr} }
-.footer-brand{max-width:20rem}
-.footer-brand-row{display:flex;align-items:center;gap:0.75rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
-.footer-uy{height:2.5rem}
+/* The mark stands as tall as the name and the blurb beside it. Its own width
+   follows that height (the artwork is 339x470), so it hangs in the block's left
+   inset — inside the flow it would narrow the copy, which would run to another
+   line, which would make the mark taller again. --footer-brand-h is measured in
+   the script; the cap keeps the mark inside the inset if the copy ever runs long. */
+.footer-brand{position:relative;max-width:24rem;padding-left:7rem}
+.footer-uy{position:absolute;left:0;top:0;height:var(--footer-brand-h,2.5rem);max-height:9.5rem}
+/* the phone rem is larger, so the inset and the cap come down with it to keep
+   the same air between the mark and the copy */
+@media (max-width:640px){
+  .footer-brand{padding-left:6rem}
+  .footer-uy{max-height:8.25rem}
+}
+.footer-brand-row{font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
 .footer-blurb{font-size:1.125rem;color:rgba(246,241,232,0.65);margin-top:1rem;line-height:1.6}
 .footer-col h3{font-size:0.875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.2em;color:rgba(246,241,232,0.5)}
 .footer-col ul{margin-top:1rem;font-size:1.125rem;color:rgba(246,241,232,0.8);display:flex;flex-direction:column;gap:0.75rem}
@@ -952,6 +957,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   display:inline-flex;align-items:center;gap:0.5rem;
   border-radius:var(--radius-pill);
   background:var(--ink);color:var(--on-ink);
+  /* the pill floats over photography, linen and the dark footer alike, so it
+     carries a light rule of its own rather than trusting the contrast */
+  border:2px solid var(--on-ink);
   padding:0.875rem 1.75rem;
   font-size:1.125rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;
   white-space:nowrap;
@@ -1327,11 +1335,13 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
     <div class="footer-cols">
       <div class="footer-brand">
-        <div class="footer-brand-row">
-          <span class="uy-mark footer-uy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
-          <span data-i18n="brand"></span>
+        <span class="uy-mark footer-uy" role="img" data-i18n-aria="a11y.ufy" aria-label="УФЙ"></span>
+        <div class="footer-brand-copy">
+          <div class="footer-brand-row">
+            <span data-i18n="brand"></span>
+          </div>
+          <p class="footer-blurb" data-i18n="footer.blurb"></p>
         </div>
-        <p class="footer-blurb" data-i18n="footer.blurb"></p>
       </div>
 
       <nav class="footer-col" data-i18n-aria="footer.colFormats" aria-label="Formats">
@@ -1919,8 +1929,9 @@ function applyI18n({ instant }) {
   paintAbout(aboutIndex, false);
   renderClassTime();
   fitAllLines();
-  /* the card carries the banner height and the clearance under it on phones, so
-     a language swap has to re-measure it */
+  /* the block under the banner carries its height and the clearance under it on
+     phones, and the footer's mark follows its copy, so a language swap has to
+     re-measure both */
   syncMetrics();
 }
 
@@ -2347,16 +2358,27 @@ window.addEventListener('scroll', syncHeader, { passive: true });
 syncHeader();
 
 /* the banner sizes itself against the header above it and — on phones — the
-   half of the time card that hangs below its bottom edge */
-const nextclassEl = document.getElementById('nextclass');
+   tagline and time card stacked below its bottom edge; the footer's mark takes
+   its height from the name and blurb beside it */
+const heroBottomEl = document.querySelector('.hero-bottom');
+const footerCopyEl = document.querySelector('.footer-brand-copy');
 function syncMetrics() {
   const root = document.documentElement.style;
   root.setProperty('--hdr-h', `${headerEl.offsetHeight}px`);
-  root.setProperty('--cluster-h', `${nextclassEl.offsetHeight}px`);
+  root.setProperty('--below-h', `${heroBottomEl.offsetHeight}px`);
+  root.setProperty('--footer-brand-h', `${footerCopyEl.offsetHeight}px`);
 }
 syncMetrics();
 window.addEventListener('resize', syncMetrics);
 document.fonts.ready.then(syncMetrics);
+/* both blocks can reflow after the fact — a webfont landing, a language swap, a
+   card or a blurb growing a line — and neither measure feeds back into the size
+   it is taken from, so they are watched rather than sampled once */
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(syncMetrics);
+  ro.observe(heroBottomEl);
+  ro.observe(footerCopyEl);
+}
 
 document.querySelectorAll('[data-open-menu]').forEach((b) => b.addEventListener('click', openMenu));
 document.getElementById('menu-close').addEventListener('click', closeMenu);
