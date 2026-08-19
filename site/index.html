@@ -82,6 +82,9 @@
   --radius-xl:0.75rem;
 
   --page-inset:0.5rem;
+  /* the side gutter every band shares; phones pull it in so the copy keeps its
+     measure without crowding the edges */
+  --gutter:1.25rem;
 
   /* Two voices: a high-contrast display serif for the headlines and the
      wordmark, a quiet geometric sans for everything that has to be read or
@@ -141,7 +144,7 @@ html.is-locked{position:relative;overflow:hidden;height:100%}
 @media (max-width:1024px){ html{font-size:1.5625vw} }
 @media (max-width:640px){  html{font-size:4.444444vw} }
 
-@media (min-width:640px){ :root{ --page-inset:0.75rem } }
+@media (min-width:640px){ :root{ --page-inset:0.75rem; --gutter:2.5rem } }
 
 main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 
@@ -379,8 +382,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .hero-plate-inner img{width:100%;height:100%;object-fit:cover;object-position:50% 84%}
 @media (max-width:640px){ .hero-plate-inner img{object-position:50% 50%} }
 
-.hero-title-wrap{padding:1.75rem 1.5rem 0}
-@media (min-width:640px){ .hero-title-wrap{padding:2rem 2.5rem 0} }
+.hero-title-wrap{padding:1.75rem var(--gutter) 0}
+@media (min-width:640px){ .hero-title-wrap{padding:2rem var(--gutter) 0} }
 #hero-title{
   font-size:12.5vw;font-weight:500;text-transform:uppercase;
   line-height:0.85;letter-spacing:-0.02em;white-space:nowrap;
@@ -398,11 +401,11 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 
 .hero-bottom{
-  margin-top:auto;padding:0 1.5rem 2rem;
+  margin-top:auto;padding:0 var(--gutter) 2rem;
   display:flex;flex-direction:column;gap:1.5rem;
 }
 @media (min-width:640px){
-  .hero-bottom{padding:0 2.5rem 2.5rem;flex-direction:row;justify-content:space-between;align-items:flex-end}
+  .hero-bottom{padding:0 var(--gutter) 2.5rem;flex-direction:row;justify-content:space-between;align-items:flex-end}
 }
 
 .hero-tagline{
@@ -425,27 +428,27 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   filter:blur(2.25rem);
   pointer-events:none;
 }
-/* on phones the tagline rides under the title so the middle of the frame,
-   where the figure is, stays free of type (see placeTagline in the script) */
-.hero-title-wrap .hero-tagline{margin-top:0.875rem}
 .hero-cluster{display:flex;align-items:flex-end;gap:1rem}
 
-/* On phones the time card straddles the bottom edge of the banner: a quarter of
-   it sits on the photo, the rest on the linen below. The banner gives up that
-   overhang plus room for the floating CTA, so the whole card still lands above
-   the fold. --cluster-h is measured in the script. */
+/* On phones the time card steps out of the banner altogether: the tagline holds
+   the foot of the photo and the card hangs just under the bottom edge, on the
+   linen. The banner gives up the card's height plus room for the floating CTA,
+   so the whole card still lands above the fold. --cluster-h is measured in the
+   script. */
 @media (max-width:640px){
   .hero{
     overflow:visible;
     /* the section below is positioned too, so the banner has to be raised for
-       the overhanging part of the card to stay on top of it */
+       the card hanging off its bottom edge to stay on top of it */
     z-index:2;
-    height:calc(100svh - 1rem - var(--hdr-h,0px) - 5rem - var(--cluster-h,12rem) * 0.75);
-    min-height:22rem;
+    height:calc(100svh - 1rem - var(--hdr-h,0px) - 0.75rem - var(--cluster-h,12rem) - 4.5rem);
+    min-height:16rem;
   }
   .hero-plate{border-radius:var(--radius-card-lg);overflow:hidden}
-  .hero-bottom{padding-bottom:0}
-  .hero-cluster{margin-bottom:calc(var(--cluster-h,12rem) * -0.75)}
+  .hero-cluster{
+    position:absolute;top:calc(100% + 0.75rem);
+    left:var(--gutter);right:var(--gutter);
+  }
 }
 
 .nextclass{
@@ -455,10 +458,11 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   padding:1.125rem;border-radius:var(--radius-card);
   box-shadow:0 1.5rem 3rem rgba(42,37,33,0.16);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
-  display:flex;gap:1.125rem;align-items:stretch;
+  /* the hours and the photo share the first row, the start note spans the foot */
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 1.125rem;align-items:stretch;
 }
 @media (min-width:640px){ .nextclass{max-width:23rem} }
-.nextclass-left{display:flex;flex-direction:column;gap:0.125rem;flex:1;min-width:0}
+.nextclass-left{display:flex;flex-direction:column;gap:0.125rem;min-width:0}
 .nextclass-time{display:flex;align-items:flex-start;gap:0.625rem}
 .nextclass-value{font-size:3.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em}
 /* the source time belongs to the number above it, not to the caption below */
@@ -506,7 +510,26 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   }
   .info:hover .info-tip,.info:focus .info-tip{transform:translate(0,0)}
 }
-.nextclass img{width:7.5rem;flex:none;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius-xl);height:auto}
+.nextclass img{width:7.5rem;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius-xl);height:auto}
+/* the September start is the news on this card, so it gets a band of its own
+   across the foot rather than a fourth line in the caption */
+.nextclass-note{
+  grid-column:1 / -1;
+  margin-top:0.875rem;padding-top:0.75rem;
+  border-top:1px solid rgba(42,37,33,0.12);
+  font-size:0.875rem;font-weight:500;line-height:1.35;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--brand);
+}
+/* A phone screen has to hold the banner, the card and the floating CTA at once,
+   so the card pulls itself in: a smaller photo, the weekday and "online" on one
+   line, a tighter start band. */
+@media (max-width:640px){
+  .nextclass{padding:1rem}
+  .nextclass img{width:6rem}
+  .nextclass-caption{flex-direction:row;gap:0.375rem;padding-top:0.5rem}
+  .nextclass-caption span + span::before{content:"·";margin-right:0.375rem}
+  .nextclass-note{margin-top:0.625rem;padding-top:0.625rem}
+}
 
 /* ============================================================
    About (ghost headline + photo carousel)
@@ -514,11 +537,11 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .about{
   position:relative;isolation:isolate;overflow:hidden;
   background:var(--background);
-  padding:2.5rem 1.5rem 3rem;
+  padding:2.5rem var(--gutter) 3rem;
 }
-@media (min-width:640px){ .about{padding:3rem 2.5rem} }
-/* clears the part of the time card that hangs off the banner above */
-@media (max-width:640px){ .about{padding-top:calc(3.5rem + var(--cluster-h,12rem) * 0.75)} }
+@media (min-width:640px){ .about{padding:3rem var(--gutter)} }
+/* clears the time card, which hangs off the banner above and lands here */
+@media (max-width:640px){ .about{padding-top:calc(3.25rem + var(--cluster-h,12rem))} }
 
 /* "Про мене" card, now the left column of the Formats band */
 .about-card{
@@ -595,8 +618,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 /* ============================================================
    Formats
    ============================================================ */
-.formats{background:var(--surface);padding:5rem 1.5rem}
-@media (min-width:640px){ .formats{padding:6rem 2.5rem} }
+.formats{background:var(--surface);padding:5rem var(--gutter)}
+@media (min-width:640px){ .formats{padding:6rem var(--gutter)} }
 .formats-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:2.5rem}
 @media (min-width:1024px){
   .formats-layout{grid-template-columns:repeat(12,minmax(0,1fr));gap:3rem}
@@ -644,9 +667,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .forwhom{
   background:var(--background);border-radius:var(--radius-card-lg);
   margin-top:-2.5rem;position:relative;z-index:1;
-  padding:4rem 1.5rem 5rem;
+  padding:4rem var(--gutter) 5rem;
 }
-@media (min-width:640px){ .forwhom{padding:4rem 2.5rem 5rem} }
+@media (min-width:640px){ .forwhom{padding:4rem var(--gutter) 5rem} }
 .fw-grid{display:grid;grid-template-columns:1fr;gap:2.5rem;align-items:end}
 @media (min-width:768px){ .fw-grid{grid-template-columns:1fr 1fr} }
 .fw-intro{max-width:24rem}
@@ -698,9 +721,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .facts{
   background:var(--ink);color:var(--on-ink);
   border-radius:var(--radius-card-lg);
-  padding:3.5rem 1.5rem;
+  padding:3.5rem var(--gutter);
 }
-@media (min-width:640px){ .facts{padding:4rem 2.5rem} }
+@media (min-width:640px){ .facts{padding:4rem var(--gutter)} }
 #facts-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
 /* four promises, set large — they carry the band on their own now that the
    counters (19 / 9) live in the "Про мене" card instead */
@@ -714,7 +737,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .socials-band{
   background:var(--ink);color:var(--on-ink);
   border-radius:var(--radius-card-lg);
-  padding:2.5rem 1.5rem;
+  padding:2.5rem var(--gutter);
   display:flex;
 }
 @media (min-width:640px){ .socials-band{padding:2.5rem} }
@@ -745,8 +768,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 /* ============================================================
    Yoga essay (her own words, beside the asana video)
    ============================================================ */
-.letter{background:var(--background);padding:5rem 1.5rem}
-@media (min-width:640px){ .letter{padding:6rem 2.5rem} }
+.letter{background:var(--background);padding:5rem var(--gutter)}
+@media (min-width:640px){ .letter{padding:6rem var(--gutter)} }
 #letter-title{font-size:3rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
 .letter{padding-top:4rem}
 .letter-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:2.5rem;align-items:start}
@@ -803,9 +826,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
    ============================================================ */
 .dance{
   background:var(--surface);border-radius:var(--radius-card-lg);
-  margin-top:0.75rem;padding:3.5rem 1.5rem;
+  margin-top:0.75rem;padding:3.5rem var(--gutter);
 }
-@media (min-width:640px){ .dance{padding:4rem 2.5rem} }
+@media (min-width:640px){ .dance{padding:4rem var(--gutter)} }
 .dance-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:center}
 @media (min-width:768px){ .dance-grid{grid-template-columns:1.4fr 1fr;gap:3rem} }
 #dance-title{font-size:2.25rem;font-weight:500;line-height:0.95;letter-spacing:-0.02em;margin-top:1rem}
@@ -823,9 +846,9 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .footer{
   background:var(--ink);color:var(--on-ink);
   border-radius:var(--radius-card-lg);margin-top:0.75rem;
-  padding:3.5rem 1.5rem;
+  padding:3.5rem var(--gutter);
 }
-@media (min-width:640px){ .footer{padding:4rem 2.5rem} }
+@media (min-width:640px){ .footer{padding:4rem var(--gutter)} }
 /* on phones the floating CTA comes back once the footer's own call to action
    has scrolled past, so the dark block grows a landing strip for it under the
    Covent AI logo */
@@ -870,8 +893,8 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 .menu.is-open{pointer-events:auto}
 .menu-backdrop{position:absolute;inset:0;background:var(--background);opacity:0}
 .menu-panel{position:relative;flex:1;display:flex;flex-direction:column;color:var(--ink-deep);padding:var(--page-inset);opacity:0;will-change:transform,opacity}
-.menu-inner{flex:1;display:flex;flex-direction:column;padding:1.5rem}
-@media (min-width:640px){ .menu-inner{padding:2rem 2.5rem 2.5rem} }
+.menu-inner{flex:1;display:flex;flex-direction:column;padding:var(--gutter)}
+@media (min-width:640px){ .menu-inner{padding:2rem var(--gutter) var(--gutter)} }
 .menu-top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .menu-brand{display:flex;align-items:center;gap:0.75rem;font-size:1.375rem;font-weight:500;text-transform:uppercase;letter-spacing:0}
 .menu-uy{height:2.25rem}
@@ -940,6 +963,54 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 /* the lockup stands over the name; the wordmark stays the loudest thing here */
 .loader-uy{height:5.25rem}
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
+
+/* ============================================================
+   Phone typography
+   Every reading size steps down about two points on a phone, where the column
+   is a third of the desktop width; the side gutters pull in with them (see
+   --gutter). The two frame-scaled display heads — the banner line and the ghost
+   rows — are sized off the viewport and keep the scale they set.
+   ============================================================ */
+@media (max-width:640px){
+  .eyebrow{font-size:0.8125rem}
+  .pill,.sticky-cta{font-size:1rem}
+
+  .hero-tagline{font-size:1.75rem}
+  .nextclass-value{font-size:3rem}
+  .nextclass-cet{font-size:1rem}
+  .nextclass-caption{font-size:0.9375rem}
+  .nextclass-note{font-size:0.8125rem}
+
+  .badge-chip{font-size:1.125rem}
+  .about-card h3{font-size:1.625rem}
+  .about-card p{font-size:0.9375rem}
+  .photo-cap b{font-size:1rem}
+  .photo-cap span{font-size:0.8125rem}
+
+  #formats-title,#forwhom-title,#facts-title,.socials-title,#letter-title{font-size:2.625rem}
+  .format-index,.format-desc{font-size:1rem}
+  .format-name{font-size:1.375rem}
+
+  .fw-body{font-size:1rem}
+  .fw-cap b{font-size:1rem}
+  .fw-cap span{font-size:0.8125rem}
+
+  .fact-line{font-size:1.625rem}
+  .socials-list a{font-size:1rem}
+
+  .letter-body p,.letter-body li{font-size:1.0625rem}
+  .letter-body .letter-lead{font-size:1.5625rem}
+
+  #dance-title{font-size:2rem}
+  .dance-body{font-size:1rem}
+
+  .footer-cta p{font-size:3.25rem}
+  .footer-brand-row,.menu-brand{font-size:1.25rem}
+  .footer-blurb,.footer-col ul,.footer-bottom,.menu-social{font-size:1rem}
+  .footer-col h3{font-size:0.8125rem}
+  .menu-nav a{font-size:2rem}
+  .loader-mark{font-size:1.5rem}
+}
 
 /* the displacement map the header's glass reads from — never painted itself */
 .glass-defs{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
@@ -1039,6 +1110,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
             </span>
           </div>
           <img src="assets/online.jpg" data-i18n-alt="hero.nextClassAlt" alt="" loading="lazy" decoding="async" />
+          <p class="nextclass-note" data-i18n="hero.startsIn"></p>
         </article>
       </div>
     </div>
@@ -1386,6 +1458,7 @@ const T = {
       sourceTime: '18:30 CET',
       tzNote: 'Час показано у вашому часовому поясі ({tz}). Початок заняття — 18:30 CET, і ця точка не змінюється.',
       tzLabel: 'Про часовий пояс',
+      startsIn: 'початок занять у вересні',
       nextClassAlt: 'Олена Піхуля проводить онлайн-заняття',
     },
 
@@ -1482,6 +1555,7 @@ const T = {
       sourceTime: '18:30 CET',
       tzNote: 'Shown in your time zone ({tz}). The class starts at 18:30 CET — that anchor never moves.',
       tzLabel: 'About the time zone',
+      startsIn: 'classes start in September',
       nextClassAlt: 'Olena Pikhulia teaching an online class',
     },
 
@@ -1804,6 +1878,9 @@ function applyI18n({ instant }) {
   paintAbout(aboutIndex, false);
   renderClassTime();
   fitAllLines();
+  /* the card carries the banner height and the clearance under it on phones, so
+     a language swap has to re-measure it */
+  syncMetrics();
 }
 
 function setLang(next) {
@@ -1942,23 +2019,11 @@ function fitAllLines() {
   document.querySelectorAll('[data-reveal="lines"]').forEach(fitLines);
 }
 
-/* On phones the hero photo fills the full height, so type at both the top and
-   the bottom would always land on the figure. Move the tagline up under the
-   title and leave the middle of the frame clear. */
+/* The tagline holds the foot of the banner at every width — on phones the time
+   card steps below the photo and leaves it that room (see the hero styles). The
+   breakpoint only changes its size, so the block is re-measured on the flip. */
 const mqPhone = matchMedia('(max-width: 640px)');
-const taglineEl = document.getElementById('hero-tagline');
-const heroTitleWrap = document.querySelector('.hero-title-wrap');
-const heroBottomEl = document.querySelector('.hero-bottom');
-function placeTagline() {
-  if (mqPhone.matches) {
-    if (taglineEl.parentElement !== heroTitleWrap) heroTitleWrap.appendChild(taglineEl);
-  } else if (taglineEl.parentElement !== heroBottomEl) {
-    heroBottomEl.insertBefore(taglineEl, heroBottomEl.firstChild);
-  }
-  fitAllLines();
-}
-placeTagline();
-mqPhone.addEventListener('change', placeTagline);
+mqPhone.addEventListener('change', fitAllLines);
 document.fonts.ready.then(fitAllLines);
 window.addEventListener('resize', fitAllLines);
 
