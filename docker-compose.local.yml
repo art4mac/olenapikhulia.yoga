@@ -9,6 +9,10 @@
 #
 #   docker compose up -d     # COMPOSE_FILE in .env points here → http://localhost:8081
 #   docker compose down
+#
+# DOWN_MODE=true serves the holding page instead of the site, the same switch the
+# host stacks read — here both directories are mounted and the served root is a
+# symlink to one of them, since the host stacks pick theirs while syncing.
 services:
   site:
     image: nginx:1.27-alpine
@@ -17,9 +21,24 @@ services:
     # loopback only: the preview has no business being reachable from the LAN
     ports:
       - "127.0.0.1:${SITE_PORT:-8081}:80"
+    environment:
+      DOWN_MODE: ${DOWN_MODE:-false}
+      SITE_URL: ${SITE_URL:-http://localhost:${SITE_PORT:-8081}}
     volumes:
-      - ./site:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./site:/srv/site:ro
+      - ./down:/srv/down:ro
+      # a template, not a conf: the image's envsubst pass puts SITE_URL into it
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template:ro
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        rm -rf /usr/share/nginx/html
+        if [ "$$DOWN_MODE" = "true" ]; then
+          ln -s /srv/down /usr/share/nginx/html
+        else
+          ln -s /srv/site /usr/share/nginx/html
+        fi
+        exec /docker-entrypoint.sh nginx -g 'daemon off;'
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
       interval: 30s

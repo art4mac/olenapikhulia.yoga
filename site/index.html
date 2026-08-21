@@ -13,16 +13,19 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 <meta name="theme-color" content="#f6f1e8" />
 
-<!-- Share card. The absolute host has to follow the site when it moves off
-     the dev domain — og:image is not resolved relative by every crawler. -->
+<!-- Share card. These have to be absolute — og:image is not resolved relative by
+     every crawler — and the host differs per environment, so the pages carry a
+     __SITE_URL__ token and nginx swaps in the base URL of whichever host serves
+     them (SITE_URL in the compose files; see the sub_filter in nginx.conf). -->
+<link rel="canonical" href="__SITE_URL__/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Олена Піхуля" />
 <meta property="og:locale" content="uk_UA" />
 <meta property="og:locale:alternate" content="en_GB" />
-<meta property="og:url" content="https://olenapikhulia.dev.coventpro.ai/" />
+<meta property="og:url" content="__SITE_URL__/" />
 <meta property="og:title" content="Олена Піхуля — йоґа онлайн" />
 <meta property="og:description" content="Навчаю йозі як мистецтву бачити красу світу та жити яскравим свідомим життям. Групові заняття онлайн щосереди та індивідуальні практики." />
-<meta property="og:image" content="https://olenapikhulia.dev.coventpro.ai/assets/og.jpg?v=3" />
+<meta property="og:image" content="__SITE_URL__/assets/og.jpg?v=3" />
 <meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -30,7 +33,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Олена Піхуля — йоґа онлайн" />
 <meta name="twitter:description" content="Групові заняття онлайн щосереди та індивідуальні практики." />
-<meta name="twitter:image" content="https://olenapikhulia.dev.coventpro.ai/assets/og.jpg?v=3" />
+<meta name="twitter:image" content="__SITE_URL__/assets/og.jpg?v=3" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

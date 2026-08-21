@@ -8,5 +8,8 @@ Selected Photos/
 .claude/
 .remember/
 .DS_Store
-docker-compose.yml
+docker-compose*.yml
+.env
+.env.example
+docs/
 README.md

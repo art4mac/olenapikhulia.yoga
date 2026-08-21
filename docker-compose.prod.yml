@@ -1,0 +1,93 @@
+# Production stack — joinmeto.yoga, deployed by Portainer from git (stack
+# prod-joinmeto, compose path docker-compose.prod.yml).
+#
+# The shape is the dev stack's: a one-shot that mirrors the git content into the
+# host web root, then nginx serving that root behind Traefik. What differs is the
+# host — an apex domain rather than a coventpro subdomain — so this file carries
+# its own HTTP→HTTPS and www→apex redirects instead of leaning on the global one,
+# and Let's Encrypt issues a certificate of its own for it.
+#
+# DOWN_MODE=true (a stack variable in Portainer) serves the holding page instead
+# of the site; see content-sync below.
+services:
+  # One-shot: builds an image from the git content and syncs it into the host web root.
+  content-sync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: prod-joinmeto-content:latest
+    container_name: prod-joinmeto-sync
+    restart: "no"
+    environment:
+      DOWN_MODE: ${DOWN_MODE:-false}
+    volumes:
+      - /var/www/vhosts/joinmeto.yoga:/dest
+      - /home/docker/infra/volumes/prod-joinmeto:/conf
+    command:
+      - sh
+      - -ec
+      - |
+        mkdir -p /dest /conf
+        if [ "$$DOWN_MODE" = "true" ]; then
+          rsync -a --delete /src/down/ /dest/
+          echo "DOWN_MODE=true — holding page only -> /var/www/vhosts/joinmeto.yoga"
+        else
+          rsync -a --delete /src/site/ /dest/
+          echo "synced git -> /var/www/vhosts/joinmeto.yoga"
+        fi
+        cp -a /src/nginx.conf /conf/nginx.conf
+
+  prod-joinmeto:
+    image: nginx:1.27-alpine
+    container_name: prod-joinmeto
+    restart: unless-stopped
+    depends_on:
+      content-sync:
+        condition: service_completed_successfully
+    networks: [coventit-net]
+    environment:
+      SITE_URL: ${SITE_URL:-https://joinmeto.yoga}
+    volumes:
+      - /var/www/vhosts/joinmeto.yoga:/usr/share/nginx/html:ro
+      # a template, not a conf: the image's envsubst pass puts SITE_URL into it
+      - /home/docker/infra/volumes/prod-joinmeto/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits: {cpus: "0.25", memory: 64M}
+        reservations: {memory: 16M}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coventit-net
+
+      # --- HTTP -> HTTPS redirect (an apex host has no global one) ---
+      - traefik.http.routers.prod-joinmeto-web.rule=Host(`joinmeto.yoga`) || Host(`www.joinmeto.yoga`)
+      - traefik.http.routers.prod-joinmeto-web.entrypoints=web
+      - traefik.http.routers.prod-joinmeto-web.middlewares=prod-joinmeto-https-redirect
+      - traefik.http.middlewares.prod-joinmeto-https-redirect.redirectscheme.scheme=https
+
+      # --- HTTPS (websecure) ---
+      - traefik.http.routers.prod-joinmeto.rule=Host(`joinmeto.yoga`) || Host(`www.joinmeto.yoga`)
+      - traefik.http.routers.prod-joinmeto.entrypoints=websecure
+      - traefik.http.routers.prod-joinmeto.service=prod-joinmeto
+      - traefik.http.routers.prod-joinmeto.tls=true
+      - traefik.http.routers.prod-joinmeto.tls.certresolver=letsencrypt
+      - traefik.http.routers.prod-joinmeto.middlewares=prod-joinmeto-www
+
+      # --- redirect www -> apex ---
+      - traefik.http.middlewares.prod-joinmeto-www.redirectregex.regex=^https://www\.joinmeto\.yoga/(.*)
+      - traefik.http.middlewares.prod-joinmeto-www.redirectregex.replacement=https://joinmeto.yoga/$${1}
+      - traefik.http.middlewares.prod-joinmeto-www.redirectregex.permanent=true
+
+      # --- service port ---
+      - traefik.http.services.prod-joinmeto.loadbalancer.server.port=80
+
+# Traefik's routing network on the coventpro host (shared with the traefik container).
+networks:
+  coventit-net:
+    external: true

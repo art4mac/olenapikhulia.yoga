@@ -1,5 +1,9 @@
 services:
   # One-shot: builds an image from the git content and syncs it into the host web root.
+  #
+  # DOWN_MODE=true syncs the holding page instead of the site, so in down mode the
+  # web root holds that page alone — the site's files are not on disk to be found.
+  # Flipping the variable and redeploying the stack is the whole switch.
   content-sync:
     build:
       context: .
@@ -7,6 +11,8 @@ services:
     image: dev-olenapikhulia-content:latest
     container_name: dev-olenapikhulia-sync
     restart: "no"
+    environment:
+      DOWN_MODE: ${DOWN_MODE:-false}
     volumes:
       - /var/www/vhosts/olenapikhulia.dev.coventpro.ai:/dest
       - /home/docker/infra/volumes/dev-olenapikhulia:/conf
@@ -15,9 +21,14 @@ services:
       - -ec
       - |
         mkdir -p /dest /conf
-        rsync -a --delete /src/site/ /dest/
+        if [ "$$DOWN_MODE" = "true" ]; then
+          rsync -a --delete /src/down/ /dest/
+          echo "DOWN_MODE=true — holding page only -> /var/www/vhosts/olenapikhulia.dev.coventpro.ai"
+        else
+          rsync -a --delete /src/site/ /dest/
+          echo "synced git -> /var/www/vhosts/olenapikhulia.dev.coventpro.ai"
+        fi
         cp -a /src/nginx.conf /conf/nginx.conf
-        echo "synced git -> /var/www/vhosts/olenapikhulia.dev.coventpro.ai"
 
   dev-olenapikhulia:
     image: nginx:1.27-alpine
@@ -27,9 +38,12 @@ services:
       content-sync:
         condition: service_completed_successfully
     networks: [coventit-net]
+    environment:
+      SITE_URL: ${SITE_URL:-https://olenapikhulia.dev.coventpro.ai}
     volumes:
       - /var/www/vhosts/olenapikhulia.dev.coventpro.ai:/usr/share/nginx/html:ro
-      - /home/docker/infra/volumes/dev-olenapikhulia/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # a template, not a conf: the image's envsubst pass puts SITE_URL into it
+      - /home/docker/infra/volumes/dev-olenapikhulia/nginx.conf:/etc/nginx/templates/default.conf.template:ro
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
       interval: 30s
