@@ -1000,8 +1000,15 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   font-size:1.625rem;font-weight:500;text-transform:uppercase;letter-spacing:0;
   opacity:0;will-change:transform,opacity;text-align:center;
 }
-/* the lockup stands over the name; the wordmark stays the loudest thing here */
-.loader-uy{height:5.25rem}
+/* the lockup stands over the name and carries the screen on its own, so it runs
+   at twice the size it wears in the chrome. It is also the centre of a colour
+   wheel: the pointer's angle around it is the hue, written into --loader-uy-tint
+   by the script, and until the pointer moves it keeps the logo's own grey. */
+.loader-uy{
+  height:10.5rem;
+  background-color:var(--loader-uy-tint,var(--uy-grey));
+  transition:background-color 140ms linear;
+}
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
 
 /* ============================================================
@@ -2420,6 +2427,18 @@ const loaderMarkM = new Motion(document.getElementById('loader-mark'), { opacity
 lockScroll();
 loaderMarkM.to({ opacity: 1, y: 0 });
 
+/* The lockup is the centre of a colour wheel: the angle from it to the pointer,
+   in degrees, is the hue. The artwork's own alpha is about a half, so the colour
+   lands on the linen at half strength — hence a saturation that would be loud on
+   its own and reads as a tint here. The listener leaves with the loader. */
+const loaderUy = loaderEl.querySelector('.loader-uy');
+function tintLockup(e) {
+  const r = loaderUy.getBoundingClientRect();
+  const deg = Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+  loaderEl.style.setProperty('--loader-uy-tint', `hsl(${((deg + 360) % 360).toFixed(1)} 68% 46%)`);
+}
+loaderEl.addEventListener('pointermove', tintLockup);
+
 const MIN_VISIBLE = REDUCED ? 200 : LOADER.MIN_VISIBLE_MS;
 const FILL_MS = Math.max(0, MIN_VISIBLE - LOADER.FILL_DELAY);
 
@@ -2443,6 +2462,7 @@ let loaderDone = false;
 function finishLoader() {
   if (loaderDone) return;
   loaderDone = true;
+  loaderEl.removeEventListener('pointermove', tintLockup);
   setReady();
   unlockScroll();
   const exit = REDUCED ? 0 : LOADER.EXIT_MS;
