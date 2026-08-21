@@ -1001,18 +1001,23 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   opacity:0;will-change:transform,opacity;text-align:center;
 }
 /* the lockup stands over the name and carries the screen on its own, so it runs
-   at twice the size it wears in the chrome. It is also the centre of a colour
-   wheel: the pointer's angle around it is the hue, and its distance decides how
-   much of that hue survives — a tight, saturated pool under the pointer up close,
-   a wide and almost colourless wash from across the screen, ending on the logo's
-   own grey. The script writes the four values; before the pointer moves, both
-   stops fall back to the grey and the lockup looks as it always did. */
+   at twice the size it wears in the chrome. The pointer is a spotlight over it:
+   a pool of colour that keeps its size, so how much of the lockup it lights is a
+   matter of how close it is — over the mark almost all of it takes the hue, from
+   a screen away none of it does and the grey is back. The hue itself is the
+   pointer's angle around the mark. The script writes the colour and the centre;
+   before the pointer moves both stops are the grey and the lockup looks as it
+   always did. */
 .loader-uy{
   height:10.5rem;
+  /* the pool is a bit over twice the mark, and full colour holds inside a fifth
+     of it before the fall to grey begins */
+  --tint-reach:23rem;
+  --tint-stop:4.5rem;
   background-color:var(--uy-grey);
   background-image:radial-gradient(
-    circle var(--tint-reach,24rem) at var(--tint-x,50%) var(--tint-y,50%),
-    var(--tint,var(--uy-grey)) var(--tint-stop,0px), var(--uy-grey) 100%);
+    circle var(--tint-reach) at var(--tint-x,50%) var(--tint-y,50%),
+    var(--tint,var(--uy-grey)) var(--tint-stop), var(--uy-grey) 100%);
 }
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
 
@@ -2432,13 +2437,13 @@ const loaderMarkM = new Motion(document.getElementById('loader-mark'), { opacity
 lockScroll();
 loaderMarkM.to({ opacity: 1, y: 0 });
 
-/* The lockup is the centre of a colour wheel: the angle from it to the pointer is
-   the hue, the distance is how much of it is left. Up close the pool is tight and
-   fully saturated; five mark-heights away the saturation has run out and the
-   lightness has risen to the logo's own grey (hsl 0 0% 70%), so the fade ends
-   exactly on the brand colour rather than near it. The artwork's own alpha is
-   about a half, so a saturation that would be loud on its own reads as a tint
-   here. Coalesced to one paint per frame; the listener leaves with the loader. */
+/* The pointer is a spotlight over the lockup. Only two things are written: the
+   hue, which is the pointer's angle around the mark, and the centre of the pool,
+   which is the pointer itself in the mark's own coordinates. The pool's size is a
+   constant in the stylesheet, so the geometry does the rest — the closer it comes
+   the more of the mark falls inside it and takes the colour, and from a screen
+   away nothing does. Coalesced to one paint per frame; the listener leaves with
+   the loader. */
 const loaderUy = loaderEl.querySelector('.loader-uy');
 let tintEvent = null;
 function paintLockup() {
@@ -2446,21 +2451,11 @@ function paintLockup() {
   tintEvent = null;
   if (!e) return;
   const r = loaderUy.getBoundingClientRect();
-  const dx = e.clientX - (r.left + r.width / 2);
-  const dy = e.clientY - (r.top + r.height / 2);
-  const deg = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;
-  const dist = Math.hypot(dx, dy);
-  const half = Math.hypot(r.width, r.height) / 2;
-  const near = Math.pow(Math.max(0, 1 - dist / (Math.max(r.width, r.height) * 5)), 0.65);
-  // the plateau ends just inside the near edge of the mark, and the fade that
-  // follows widens with distance — the ramp flattens as the pointer retreats
-  const stop = Math.max(0, dist - half * 0.5);
+  const deg = Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
   const s = loaderUy.style;
-  s.setProperty('--tint', `hsl(${deg.toFixed(1)} ${(68 * near).toFixed(0)}% ${(70 - 24 * near).toFixed(0)}%)`);
+  s.setProperty('--tint', `hsl(${((deg + 360) % 360).toFixed(1)} 68% 46%)`);
   s.setProperty('--tint-x', `${((e.clientX - r.left) / r.width * 100).toFixed(1)}%`);
   s.setProperty('--tint-y', `${((e.clientY - r.top) / r.height * 100).toFixed(1)}%`);
-  s.setProperty('--tint-stop', `${stop.toFixed(0)}px`);
-  s.setProperty('--tint-reach', `${(stop + 90 + dist * 0.5).toFixed(0)}px`);
 }
 function tintLockup(e) {
   if (!tintEvent) requestAnimationFrame(paintLockup);
