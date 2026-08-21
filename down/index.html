@@ -59,6 +59,7 @@ body{
      both stops are the logo's own grey. */
   --tint-reach:23rem;
   --tint-stop:4.5rem;
+  cursor:pointer;
   background-color:var(--uy-grey);
   background-image:radial-gradient(
     circle var(--tint-reach) at var(--tint-x,50%) var(--tint-y,50%),
@@ -101,6 +102,47 @@ body{
     if (!last) requestAnimationFrame(paint);
     last = e;
   }, { passive: true });
+
+  /* A click on the mark answers with confetti — canvas-confetti's "realistic
+     look": five bursts of different spread, velocity, decay and scale fired at
+     once, because one cone of two hundred particles reads as a flat fan. The
+     figures are the recipe's own; only the origin moves, from the page's lower
+     middle to the mark itself. The library is the one thing this page fetches
+     besides its typeface, and it is fetched on the first pointer move rather
+     than up front; without it the click simply does nothing. */
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var confettiFn = null, loading = null;
+  function load() {
+    if (loading) return loading;
+    loading = new Promise(function (done) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js';
+      s.onload = function () { confettiFn = window.confetti; done(); };
+      s.onerror = function () { done(); };
+      document.head.appendChild(s);
+    });
+    return loading;
+  }
+  addEventListener('pointermove', load, { once: true });
+
+  uy.addEventListener('click', function () {
+    load().then(function () {
+      if (!confettiFn) return;
+      var r = uy.getBoundingClientRect();
+      var origin = { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight };
+      var count = 200;
+      function fire(ratio, opts) {
+        opts.origin = origin;
+        opts.particleCount = Math.floor(count * ratio);
+        confettiFn(opts);
+      }
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
+    });
+  });
 })();
 </script>
 </body>

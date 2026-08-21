@@ -40,7 +40,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Manrope:wght@400;500;600&display=swap" />
 
 <script type="importmap">
-{ "imports": { "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm" } }
+{ "imports": {
+  "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm",
+  "canvas-confetti": "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/+esm"
+} }
 </script>
 
 <!-- adaptive rem: scale-up above the 1920 design width, applied before first paint -->
@@ -1018,6 +1021,7 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
   background-image:radial-gradient(
     circle var(--tint-reach) at var(--tint-x,50%) var(--tint-y,50%),
     var(--tint,var(--uy-grey)) var(--tint-stop), var(--uy-grey) 100%);
+  cursor:pointer;
 }
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
 
@@ -2462,6 +2466,41 @@ function tintLockup(e) {
   tintEvent = e;
 }
 loaderEl.addEventListener('pointermove', tintLockup);
+
+/* A click on the lockup answers with confetti — canvas-confetti's "realistic
+   look": five bursts of different spread, velocity, decay and scale fired at
+   once, because one cone of two hundred particles reads as a flat fan. The
+   figures are the recipe's own; only the origin moves, from the page's lower
+   middle to the lockup itself, so the confetti comes out of the mark that was
+   clicked. The module is pulled in on the first pointer move, off the critical
+   path, so the click has it ready. */
+let confettiFn = null;
+let confettiLoading = null;
+function loadConfetti() {
+  if (REDUCED || confettiFn || confettiLoading) return confettiLoading;
+  confettiLoading = import('canvas-confetti')
+    .then((m) => { confettiFn = m.default; })
+    .catch(() => {});                     // no CDN, no confetti: nothing else breaks
+  return confettiLoading;
+}
+loaderEl.addEventListener('pointermove', loadConfetti, { once: true });
+
+async function burstFromLockup() {
+  await loadConfetti();
+  if (!confettiFn) return;
+  const r = loaderUy.getBoundingClientRect();
+  const origin = { x: (r.left + r.width / 2) / window.innerWidth, y: (r.top + r.height / 2) / window.innerHeight };
+  const count = 200;
+  // the library keeps its own canvas on the body; 300 puts it over the loading
+  // screen, and it stays to finish the burst after the screen has lifted
+  const fire = (ratio, opts) => confettiFn({ origin, zIndex: 300, ...opts, particleCount: Math.floor(count * ratio) });
+  fire(0.25, { spread: 26, startVelocity: 55 });
+  fire(0.2, { spread: 60 });
+  fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+  fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+  fire(0.1, { spread: 120, startVelocity: 45 });
+}
+loaderUy.addEventListener('click', burstFromLockup);
 
 const MIN_VISIBLE = REDUCED ? 200 : LOADER.MIN_VISIBLE_MS;
 const FILL_MS = Math.max(0, MIN_VISIBLE - LOADER.FILL_DELAY);
