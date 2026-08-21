@@ -1002,12 +1002,17 @@ main{width:100%;overflow-x:clip;padding:var(--page-inset)}
 }
 /* the lockup stands over the name and carries the screen on its own, so it runs
    at twice the size it wears in the chrome. It is also the centre of a colour
-   wheel: the pointer's angle around it is the hue, written into --loader-uy-tint
-   by the script, and until the pointer moves it keeps the logo's own grey. */
+   wheel: the pointer's angle around it is the hue, and its distance decides how
+   much of that hue survives — a tight, saturated pool under the pointer up close,
+   a wide and almost colourless wash from across the screen, ending on the logo's
+   own grey. The script writes the four values; before the pointer moves, both
+   stops fall back to the grey and the lockup looks as it always did. */
 .loader-uy{
   height:10.5rem;
-  background-color:var(--loader-uy-tint,var(--uy-grey));
-  transition:background-color 140ms linear;
+  background-color:var(--uy-grey);
+  background-image:radial-gradient(
+    circle var(--tint-reach,24rem) at var(--tint-x,50%) var(--tint-y,50%),
+    var(--tint,var(--uy-grey)) var(--tint-stop,0px), var(--uy-grey) 100%);
 }
 .loader-track{width:10rem;height:1px;border-radius:var(--radius-pill);background:rgba(42,37,33,0.2);overflow:hidden}
 
@@ -2427,15 +2432,39 @@ const loaderMarkM = new Motion(document.getElementById('loader-mark'), { opacity
 lockScroll();
 loaderMarkM.to({ opacity: 1, y: 0 });
 
-/* The lockup is the centre of a colour wheel: the angle from it to the pointer,
-   in degrees, is the hue. The artwork's own alpha is about a half, so the colour
-   lands on the linen at half strength — hence a saturation that would be loud on
-   its own and reads as a tint here. The listener leaves with the loader. */
+/* The lockup is the centre of a colour wheel: the angle from it to the pointer is
+   the hue, the distance is how much of it is left. Up close the pool is tight and
+   fully saturated; five mark-heights away the saturation has run out and the
+   lightness has risen to the logo's own grey (hsl 0 0% 70%), so the fade ends
+   exactly on the brand colour rather than near it. The artwork's own alpha is
+   about a half, so a saturation that would be loud on its own reads as a tint
+   here. Coalesced to one paint per frame; the listener leaves with the loader. */
 const loaderUy = loaderEl.querySelector('.loader-uy');
-function tintLockup(e) {
+let tintEvent = null;
+function paintLockup() {
+  const e = tintEvent;
+  tintEvent = null;
+  if (!e) return;
   const r = loaderUy.getBoundingClientRect();
-  const deg = Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
-  loaderEl.style.setProperty('--loader-uy-tint', `hsl(${((deg + 360) % 360).toFixed(1)} 68% 46%)`);
+  const dx = e.clientX - (r.left + r.width / 2);
+  const dy = e.clientY - (r.top + r.height / 2);
+  const deg = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;
+  const dist = Math.hypot(dx, dy);
+  const half = Math.hypot(r.width, r.height) / 2;
+  const near = Math.pow(Math.max(0, 1 - dist / (Math.max(r.width, r.height) * 5)), 0.65);
+  // the plateau ends just inside the near edge of the mark, and the fade that
+  // follows widens with distance — the ramp flattens as the pointer retreats
+  const stop = Math.max(0, dist - half * 0.5);
+  const s = loaderUy.style;
+  s.setProperty('--tint', `hsl(${deg.toFixed(1)} ${(68 * near).toFixed(0)}% ${(70 - 24 * near).toFixed(0)}%)`);
+  s.setProperty('--tint-x', `${((e.clientX - r.left) / r.width * 100).toFixed(1)}%`);
+  s.setProperty('--tint-y', `${((e.clientY - r.top) / r.height * 100).toFixed(1)}%`);
+  s.setProperty('--tint-stop', `${stop.toFixed(0)}px`);
+  s.setProperty('--tint-reach', `${(stop + 90 + dist * 0.5).toFixed(0)}px`);
+}
+function tintLockup(e) {
+  if (!tintEvent) requestAnimationFrame(paintLockup);
+  tintEvent = e;
 }
 loaderEl.addEventListener('pointermove', tintLockup);
 
