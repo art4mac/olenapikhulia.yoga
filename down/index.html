@@ -11,6 +11,28 @@
      mode the web root holds this page alone, so nothing else can be reached. -->
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#f6f1e8" />
+<meta name="description" content="Групові та індивідуальні заняття йогою онлайн." />
+
+<!-- Share card of its own: down mode has to answer a link the way the site does,
+     and its web root holds nothing but this page and og.jpg. The absolute host is
+     the __SITE_URL__ token nginx fills in (see nginx.conf), so a card scraped
+     from prod points at prod. The card itself is rendered from
+     cards/og-down.html in the repository. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Олена Піхуля" />
+<meta property="og:locale" content="uk_UA" />
+<meta property="og:url" content="__SITE_URL__/" />
+<meta property="og:title" content="Олена Піхуля — йоґа онлайн" />
+<meta property="og:description" content="Групові та індивідуальні заняття йогою онлайн." />
+<meta property="og:image" content="__SITE_URL__/og.jpg?v=1" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Олена Піхуля — йоґа онлайн" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Олена Піхуля — йоґа онлайн" />
+<meta name="twitter:description" content="Групові та індивідуальні заняття йогою онлайн." />
+<meta name="twitter:image" content="__SITE_URL__/og.jpg?v=1" />
 <link rel="icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f6f1e8'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%232a2521' stroke-width='2.2'/%3E%3Ccircle cx='16' cy='16' r='3.1' fill='%23b4653f'/%3E%3C/svg%3E" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

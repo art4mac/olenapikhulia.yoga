@@ -12,4 +12,5 @@ docker-compose*.yml
 .env
 .env.example
 docs/
+cards/
 README.md

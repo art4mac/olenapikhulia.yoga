@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8" />
+<!-- The source of down/og.jpg — the share card the holding page serves.
+     Rendered by opening this file at a 2400x1260 viewport with the root zoomed
+     to 2 (so the type is drawn at twice its final size), screenshotting, then
+     downscaling to 1200x630 as a JPEG at quality 86:
+       sips -Z 1200 --setProperty format jpeg --setProperty formatOptions 86 \
+            shot.png --out down/og.jpg
+     This directory is not part of any image: the Dockerfile copies site/ and
+     down/ only. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Manrope:wght@500&display=swap" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px;overflow:hidden}
+  body{
+    position:relative;
+    background:#f6f1e8;
+    color:#2a2521;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;
+  }
+  /* the same pale disc and terracotta dot the site's card wears */
+  .disc{
+    position:absolute;top:-190px;right:-150px;
+    width:520px;height:520px;border-radius:50%;
+    background:#ede4d6;
+  }
+  .dot{position:absolute;top:150px;right:96px;width:14px;height:14px;border-radius:50%;background:#b4653f}
+  .uy{
+    position:relative;
+    width:148px;height:205px;
+    background-color:#b2b2b2;
+    -webkit-mask:url("../site/assets/uy-logo.png") center/contain no-repeat;
+            mask:url("../site/assets/uy-logo.png") center/contain no-repeat;
+  }
+  .name{
+    position:relative;
+    font-family:"Playfair Display",Georgia,serif;font-weight:500;
+    font-size:66px;line-height:1;text-transform:uppercase;letter-spacing:0.01em;
+  }
+  .sub{
+    position:relative;
+    font-family:"Manrope","Montserrat",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:0.22em;
+    color:#6b6259;
+  }
+  .rule{position:relative;width:104px;height:2px;background:#b4653f;margin-top:6px}
+</style>
+</head>
+<body>
+  <div class="disc"></div>
+  <div class="dot"></div>
+  <div class="uy"></div>
+  <div class="name">Олена Піхуля</div>
+  <div class="sub">йоґа онлайн</div>
+  <div class="rule"></div>
+</body>
+</html>
